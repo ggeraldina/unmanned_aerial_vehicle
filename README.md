@@ -2,7 +2,7 @@
 
 Запуск
 
-`>python video.py test_video/video.mp4`
+`>python -m processing_video -v test_video/any/car_evening.mp4`
 
 Выход
 
