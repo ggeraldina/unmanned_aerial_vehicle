@@ -1,5 +1,5 @@
 import argparse
-from video import run
+from video import Video
 
 
 def parse():
@@ -14,4 +14,5 @@ args = parse()
 if not args.video:
     print("Нужно указать путь к видео. Параметр -v или --video.")
 else:
-    run(args.video)
+    video = Video(args.video)
+    video.run()
