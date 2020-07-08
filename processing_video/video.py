@@ -179,9 +179,10 @@ class Video:
         CONTINUE_PROCESSING - если, продолжение просмотра 
         """
         key = cv2.waitKey(30) & 0xff
+        # Esc - выход
         if key == 27:
             return EXIT_SUCCESS
-        # Сохранить кадр и маску
+        # s - Сохранить кадр и маску
         if key == ord("s"):
             cv2.imwrite(DEFAULT_IMAGE_NAME, self._current_frame)
             cv2.imwrite(DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
