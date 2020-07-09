@@ -87,7 +87,8 @@ class Video:
             Вычитание фона
         """
         self._foreground_mask = background_subtractor.apply(
-            self._current_frame)
+            self._current_frame
+        )
         kornel_size = (5, 5)
         sigma = 1
         self._foreground_mask = cv2.GaussianBlur(
@@ -158,7 +159,9 @@ class Video:
     def _show_video(self):
         """ Показать результат """
         if self._showing_mask:
+            cv2.namedWindow("foreground mask", cv2.WINDOW_NORMAL)        
             cv2.imshow("foreground mask", self._foreground_mask)
+        cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
         cv2.imshow("frame", self._current_frame)
 
     def _save_video(self):

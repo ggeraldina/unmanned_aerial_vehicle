@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/any/car_evening.mp4"]
+            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4"]
         }
     ]
 }
