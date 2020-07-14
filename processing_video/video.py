@@ -1,3 +1,6 @@
+import datetime
+import os
+
 import cv2
 import numpy
 
@@ -159,7 +162,7 @@ class Video:
     def _show_video(self):
         """ Показать результат """
         if self._showing_mask:
-            cv2.namedWindow(DEFAULT_MASK_WINDOW_NAME, cv2.WINDOW_NORMAL)        
+            cv2.namedWindow(DEFAULT_MASK_WINDOW_NAME, cv2.WINDOW_NORMAL)
             cv2.imshow(DEFAULT_MASK_WINDOW_NAME, self._foreground_mask)
         cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
         cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
@@ -187,8 +190,22 @@ class Video:
             return EXIT_SUCCESS
         # s - Сохранить кадр и маску
         if key == ord("s"):
-            cv2.imwrite(DEFAULT_IMAGE_NAME, self._current_frame)
-            cv2.imwrite(DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
+            self._save_frame()
         if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:        
             return EXIT_SUCCESS
+        if self._showing_mask and cv2.getWindowProperty(DEFAULT_MASK_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:        
+            return EXIT_SUCCESS
         return CONTINUE_PROCESSING
+
+
+    def _save_frame(self):
+        """ Сохранить кадр """
+        DIRECTORY = "saving/"
+        try:
+            os.makedirs(DIRECTORY)
+        except OSError:
+            pass
+        now = datetime.datetime.now()
+        now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
+        cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_NAME, self._current_frame)
+        cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)

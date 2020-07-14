@@ -5,11 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: processing_video",
+            "name": "run",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
             "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4"]
+        },
+        {
+            "name": "run with mask",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True"]
         }
     ]
 }
