@@ -69,7 +69,7 @@ class Video:
 
     def run(self):
         """ Выполнить обработку видео """
-        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG()
+        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(history=3, backgroundRatio = 0.95)
 
         while(True):
             self._update_foreground_mask(background_subtractor)
@@ -116,7 +116,7 @@ class Video:
         """
         amount_drawn_contours = 0
         rectangle_color = (0, 0, 255)
-        min_size_contour_area = 1000
+        min_size_contour_area = 100
         for contour in contours:
             if cv2.contourArea(contour) > min_size_contour_area:
                 (x, y, w, h) = cv2.boundingRect(contour)
