@@ -159,10 +159,10 @@ class Video:
     def _show_video(self):
         """ Показать результат """
         if self._showing_mask:
-            cv2.namedWindow("foreground mask", cv2.WINDOW_NORMAL)        
-            cv2.imshow("foreground mask", self._foreground_mask)
-        cv2.namedWindow("frame", cv2.WINDOW_NORMAL)
-        cv2.imshow("frame", self._current_frame)
+            cv2.namedWindow(DEFAULT_MASK_WINDOW_NAME, cv2.WINDOW_NORMAL)        
+            cv2.imshow(DEFAULT_MASK_WINDOW_NAME, self._foreground_mask)
+        cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
+        cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
 
     def _save_video(self):
         """ Сохранить результат """
@@ -189,4 +189,6 @@ class Video:
         if key == ord("s"):
             cv2.imwrite(DEFAULT_IMAGE_NAME, self._current_frame)
             cv2.imwrite(DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
+        if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:        
+            return EXIT_SUCCESS
         return CONTINUE_PROCESSING
