@@ -92,15 +92,16 @@ class Video:
         self._foreground_mask = background_subtractor.apply(
             self._current_frame
         )
-        # kornel_size = (5, 5)
+        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        # self._foreground_mask = cv2.morphologyEx(
+        #     self._foreground_mask, cv2.MORPH_OPEN, kernel
+        # )
+        # kornel_size = (3, 3)
         # sigma = 1
         # self._foreground_mask = cv2.GaussianBlur(
         #     self._foreground_mask, kornel_size, sigma
         # )
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        self._foreground_mask = cv2.morphologyEx(
-            self._foreground_mask, cv2.MORPH_OPEN, kernel
-        )
+        
 
     def _drow_contours(self):
         """ Нарисовать окаймляющие контуры на текущем кадре """
