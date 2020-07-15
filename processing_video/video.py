@@ -70,8 +70,12 @@ class Video:
     def run(self):
         """ Выполнить обработку видео """
         background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(history=3, backgroundRatio = 0.95)
+        amount_frame = 1
 
         while(True):
+            if not amount_frame % 5 == 0:
+                _, self._current_frame = self._capture.read()
+                amount_frame += 1
             self._update_foreground_mask(background_subtractor)
             self._drow_contours()
             self._show_video()
@@ -79,6 +83,7 @@ class Video:
             if self._check_commands() == EXIT_SUCCESS:
                 break
             _, self._current_frame = self._capture.read()
+            amount_frame += 1
         self._capture.release()
         cv2.destroyAllWindows()
 
