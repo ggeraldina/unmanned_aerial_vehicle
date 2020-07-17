@@ -19,6 +19,13 @@
             "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True"]
         },
         {
+            "name": "run short with mask",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": ["-v", "test_video/uniyar/ch02_20200605114152 (online-video-cutter.com) (1).mp4", "-shm", "True"]
+        },
+        {
             "name": "run2 with mask",
             "type": "python",
             "request": "launch",
