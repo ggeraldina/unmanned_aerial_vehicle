@@ -35,6 +35,14 @@ class Video:
         Высота кадра, 
     _frame_width: int
         Ширина кадра
+    _foreground_mask: array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
+        Маска кадра
+
+    Если был передан флаг сохранения видео:
+    _out_video: VideoWriter
+        Видео с контурами
+    _out_video_mask: VideoWriter
+        Видео маски
     """
 
     def __init__(self, path_video, saving_videos=False, showing_mask=False):
@@ -89,18 +97,20 @@ class Video:
         background_subtractor : BackgroundSubtractor
             Вычитание фона
         """
-        self._foreground_mask = background_subtractor.apply(
+        foreground_mask = background_subtractor.apply(
             self._current_frame
         )
-        # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        # self._foreground_mask = cv2.morphologyEx(
-        #     self._foreground_mask, cv2.MORPH_OPEN, kernel
-        # )
-        # kornel_size = (3, 3)
-        # sigma = 1
-        # self._foreground_mask = cv2.GaussianBlur(
-        #     self._foreground_mask, kornel_size, sigma
-        # )
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        # TODO: replace an attribute with a variable
+        self._tmp_place_foreground_mask = cv2.morphologyEx(
+            foreground_mask, cv2.MORPH_OPEN, kernel
+        )
+        kornel_size = (3, 3)
+        sigma = 1
+        object_foreground_mask = cv2.GaussianBlur(
+            foreground_mask, kornel_size, sigma
+        )
+        self._foreground_mask = object_foreground_mask
         
 
     def _drow_contours(self):
@@ -169,6 +179,10 @@ class Video:
         if self._showing_mask:
             cv2.namedWindow(DEFAULT_MASK_WINDOW_NAME, cv2.WINDOW_NORMAL)
             cv2.imshow(DEFAULT_MASK_WINDOW_NAME, self._foreground_mask)
+            # TODO: delete
+            cv2.namedWindow("place", cv2.WINDOW_NORMAL)
+            cv2.imshow("place", self._tmp_place_foreground_mask)
+            # end TODO: delete
         cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
         cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
 
@@ -214,3 +228,6 @@ class Video:
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
         cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_NAME, self._current_frame)
         cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
+        # TODO: delete
+        cv2.imwrite(DIRECTORY + now + "place_" + DEFAULT_IMAGE_MASK_NAME, self._tmp_place_foreground_mask)
+
