@@ -108,10 +108,11 @@ class Video:
         )
         kornel_size = (3, 3)
         sigma = 1
-        object_foreground_mask = cv2.GaussianBlur(
+        # TODO: replace an attribute with a variable
+        self._tmp_object_foreground_mask = cv2.GaussianBlur(
             foreground_mask, kornel_size, sigma
         )
-        self._foreground_mask = compute_foreground_mask(self._tmp_place_foreground_mask, object_foreground_mask)
+        self._foreground_mask = compute_foreground_mask(self._tmp_place_foreground_mask, self._tmp_object_foreground_mask)
         
 
     def _drow_contours(self):
@@ -183,6 +184,8 @@ class Video:
             # TODO: delete
             cv2.namedWindow("place", cv2.WINDOW_NORMAL)
             cv2.imshow("place", self._tmp_place_foreground_mask)
+            cv2.namedWindow("object", cv2.WINDOW_NORMAL)
+            cv2.imshow("object", self._tmp_object_foreground_mask)
             # end TODO: delete
         cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
         cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
@@ -231,4 +234,5 @@ class Video:
         cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
         # TODO: delete
         cv2.imwrite(DIRECTORY + now + "place_" + DEFAULT_IMAGE_MASK_NAME, self._tmp_place_foreground_mask)
+        cv2.imwrite(DIRECTORY + now + "object_" + DEFAULT_IMAGE_MASK_NAME, self._tmp_object_foreground_mask)
 
