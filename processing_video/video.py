@@ -5,6 +5,7 @@ import cv2
 import numpy
 
 from .constants import *
+from .foreground_mask import compute_foreground_mask
 
 
 class Video:
@@ -110,7 +111,7 @@ class Video:
         object_foreground_mask = cv2.GaussianBlur(
             foreground_mask, kornel_size, sigma
         )
-        self._foreground_mask = object_foreground_mask
+        self._foreground_mask = compute_foreground_mask(self._tmp_place_foreground_mask, object_foreground_mask)
         
 
     def _drow_contours(self):
