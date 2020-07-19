@@ -97,7 +97,7 @@ class Video:
         place_framing_rectangles = self._produce_place_framing_rectangles(place_foreground_mask)
         self._process_foreground_mask()
         contours, hierarchy = cv2.findContours(
-            self._foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            self._foreground_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
         )
         self._drow_framing_contours(contours, hierarchy)
         self._drow_framing_rectangles(contours, place_framing_rectangles)
