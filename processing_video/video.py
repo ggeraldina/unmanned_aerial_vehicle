@@ -145,27 +145,21 @@ class Video:
         Parameters
         ----------
         contours:  [array([[[int, int],...]], dtype=int32)]
-            Контуры объектов
+            Контуры объектов 
         place_framing_rectangles: [(x1, y1, x2, y2), ...]
             Координаты углов прямоугольников
         """
         amount_drawn_contours = 0
         rectangle_color = (0, 0, 255)
-        min_size_contour_area = 4
         for contour in contours:
-            if cv2.contourArea(contour) > min_size_contour_area:
-                x1, y1, w, h = cv2.boundingRect(contour)
-                x2, y2 = x1 + w, y1 + h
-                if cv2.contourArea(contour) > 200:
+            x1, y1, w, h = cv2.boundingRect(contour)
+            x2, y2 = x1 + w, y1 + h
+            for rec in place_framing_rectangles:
+                if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
                     cv2.rectangle(
-                            self._current_frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2
-                        )
-                for rec in place_framing_rectangles:
-                    if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
-                        cv2.rectangle(
-                            self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
-                        )
-                        amount_drawn_contours += 1
+                        self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
+                    )
+                    amount_drawn_contours += 1
         self._drow_count(amount_drawn_contours)
 
 
