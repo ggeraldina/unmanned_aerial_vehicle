@@ -152,14 +152,18 @@ class Video:
         amount_drawn_contours = 0
         rectangle_color = (0, 0, 255)
         for contour in contours:
+            flag_drawn = False
             x1, y1, w, h = cv2.boundingRect(contour)
             x2, y2 = x1 + w, y1 + h
             for rec in place_framing_rectangles:
-                if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
-                    cv2.rectangle(
-                        self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
-                    )
-                    amount_drawn_contours += 1
+                if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):                    
+                    if(not flag_drawn):
+                        amount_drawn_contours += 1
+                        cv2.rectangle(
+                            self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
+                        )                    
+                        flag_drawn = True
+                    
         self._drow_count(amount_drawn_contours)
 
 
