@@ -19,6 +19,13 @@
             "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True"]
         },
         {
+            "name": "run save with mask",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True", "-sv", "True"]
+        },
+        {
             "name": "run short with mask",
             "type": "python",
             "request": "launch",
@@ -31,6 +38,13 @@
             "request": "launch",
             "module": "processing_video",
             "args": ["-v", "test_video/uniyar2/ch01_20200703114220.mp4", "-shm", "True"]
+        },
+        {
+            "name": "run2 save with mask",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": ["-v", "test_video/uniyar2/ch01_20200703114220.mp4", "-shm", "True", "-sv", "True"]
         }
     ]
 }

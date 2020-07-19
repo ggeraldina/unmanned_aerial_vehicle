@@ -65,13 +65,21 @@ class Video:
 
     def _init_out_video(self):
         """ Инициализировать атрибуты с видео результатом """
+        try:
+            os.makedirs(DIRECTORY_SAVING)
+        except OSError:
+            pass
+        now = datetime.datetime.now()
+        now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))     
         framerate = 10
         self._out_video = cv2.VideoWriter(
-            DEFAULT_VIDEO_NAME, cv2.VideoWriter_fourcc(*"mp4v"),
+            DIRECTORY_SAVING + now + DEFAULT_VIDEO_NAME, 
+            cv2.VideoWriter_fourcc(*"mp4v"),
             framerate, (self._frame_width, self._frame_height)
         )
         self._out_video_mask = cv2.VideoWriter(
-            DEFAULT_VIDEO_MASK_NAME, cv2.VideoWriter_fourcc(*"mp4v"),
+            DIRECTORY_SAVING + now + DEFAULT_VIDEO_MASK_NAME, 
+            cv2.VideoWriter_fourcc(*"mp4v"),
             framerate, (self._frame_width, self._frame_height)
         )
 
@@ -254,12 +262,11 @@ class Video:
 
     def _save_frame(self):
         """ Сохранить кадр """
-        DIRECTORY = "saving/"
         try:
-            os.makedirs(DIRECTORY)
+            os.makedirs(DIRECTORY_SAVING)
         except OSError:
             pass
         now = datetime.datetime.now()
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
-        cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_NAME, self._current_frame)
-        cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
+        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
+        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
