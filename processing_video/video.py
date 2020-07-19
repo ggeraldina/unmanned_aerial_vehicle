@@ -80,7 +80,7 @@ class Video:
         background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(history=3, backgroundRatio = 0.95)
 
         while(True):
-            self._update_foreground_mask(background_subtractor)
+            self._foreground_mask = background_subtractor.apply(self._current_frame)
             self._drow_contours()
             self._show_video()
             self._save_video()
@@ -89,58 +89,98 @@ class Video:
             _, self._current_frame = self._capture.read()
         self._capture.release()
         cv2.destroyAllWindows()
-
-    def _update_foreground_mask(self, background_subtractor):
-        """ Обновить маску для текущего кадра 
-        Parameters
-        ----------
-        background_subtractor : BackgroundSubtractor
-            Вычитание фона
-        """
-        foreground_mask = background_subtractor.apply(
-            self._current_frame
-        )
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        # TODO: replace an attribute with a variable
-        self._tmp_place_foreground_mask = cv2.morphologyEx(
-            foreground_mask, cv2.MORPH_OPEN, kernel
-        )
-        kornel_size = (3, 3)
-        sigma = 1
-        # TODO: replace an attribute with a variable
-        self._tmp_object_foreground_mask = cv2.GaussianBlur(
-            foreground_mask, kornel_size, sigma
-        )
-        self._foreground_mask = self._tmp_place_foreground_mask
         
 
     def _drow_contours(self):
         """ Нарисовать окаймляющие контуры на текущем кадре """
+        place_foreground_mask = self._produce_place_foreground_mask()
+        place_framing_rectangles = self._produce_place_framing_rectangles(place_foreground_mask)
+        self._process_foreground_mask()
         contours, hierarchy = cv2.findContours(
             self._foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
         self._drow_framing_contours(contours, hierarchy)
-        self._drow_framing_rectangles(contours)
+        self._drow_framing_rectangles(contours, place_framing_rectangles)
 
-    def _drow_framing_rectangles(self, contours):
+
+    def _produce_place_foreground_mask(self):
+        """ Создать маску для определения места, где находится объект """
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        return cv2.morphologyEx(
+            self._foreground_mask, cv2.MORPH_OPEN, kernel
+        )
+    
+    def _produce_place_framing_rectangles(self, place_foreground_mask):
+        """ Вычислить окаймляющие прямоугольники для маски места 
+        Parameters
+        ----------
+        place_foreground_mask:  array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
+            Маска локации
+        Returns
+        -------
+        [(x1, y1, x2, y2), ...] - Координаты углов прямоугольников
+        """        
+        contours, _ = cv2.findContours(
+            place_foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+        )
+        place_framing_rectangles = []
+        for contour in contours:
+            (x, y, w, h) = cv2.boundingRect(contour)
+            place_framing_rectangles.append((x, y, x + w, y + h))
+        return place_framing_rectangles
+
+    
+    def _process_foreground_mask(self):
+        """ Обработать маску текущего кадра """
+        kornel_size = (3, 3)
+        sigma = 1
+        self._foreground_mask = cv2.GaussianBlur(
+            self._foreground_mask, kornel_size, sigma
+        )
+
+
+    def _drow_framing_rectangles(self, contours, place_framing_rectangles):
         """ Нарисовать объемлющие прямоугольники 
         вокруг движущихся объектов и их количество
         Parameters
         ----------
         contours:  [array([[[int, int],...]], dtype=int32)]
             Контуры объектов
+        place_framing_rectangles: [(x1, y1, x2, y2), ...]
+            Координаты углов прямоугольников
         """
         amount_drawn_contours = 0
         rectangle_color = (0, 0, 255)
-        min_size_contour_area = 100
+        min_size_contour_area = 4
         for contour in contours:
             if cv2.contourArea(contour) > min_size_contour_area:
-                (x, y, w, h) = cv2.boundingRect(contour)
-                cv2.rectangle(
-                    self._current_frame, (x, y), (x + w, y + h), rectangle_color, thickness=2
-                )
-                amount_drawn_contours += 1
+                x1, y1, w, h = cv2.boundingRect(contour)
+                x2, y2 = x1 + w, y1 + h
+                if cv2.contourArea(contour) > 200:
+                    cv2.rectangle(
+                            self._current_frame, (x1, y1), (x2, y2), (255, 0, 0), thickness=2
+                        )
+                for rec in place_framing_rectangles:
+                    if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
+                        cv2.rectangle(
+                            self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
+                        )
+                        amount_drawn_contours += 1
         self._drow_count(amount_drawn_contours)
+
+
+    def _is_intersecting_rectangles(self, first_rectangle, second_rectangle):
+        """ Пересекаются ли прямоугольники         
+        Returns
+        -------
+        True / False - пересекаются ли прямоугольники
+        """
+        r1_x1, r1_y1, r1_x2, r1_y2 = first_rectangle
+        r2_x1, r2_y1, r2_x2, r2_y2 = second_rectangle
+        if(r1_x1 > r2_x2 or r1_x2 < r2_x1 or r1_y1 > r2_y2 or r1_y2 < r2_y1):
+            return False
+        return True
+
 
     def _drow_count(self, amount_drawn_contours):
         """ Нарисовать счетчик с количеством объемлющих прямоугольников
@@ -180,12 +220,6 @@ class Video:
         if self._showing_mask:
             cv2.namedWindow(DEFAULT_MASK_WINDOW_NAME, cv2.WINDOW_NORMAL)
             cv2.imshow(DEFAULT_MASK_WINDOW_NAME, self._foreground_mask)
-            # TODO: delete
-            cv2.namedWindow("place", cv2.WINDOW_NORMAL)
-            cv2.imshow("place", self._tmp_place_foreground_mask)
-            cv2.namedWindow("object", cv2.WINDOW_NORMAL)
-            cv2.imshow("object", self._tmp_object_foreground_mask)
-            # end TODO: delete
         cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
         cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
 
@@ -231,7 +265,3 @@ class Video:
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
         cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_NAME, self._current_frame)
         cv2.imwrite(DIRECTORY + now + DEFAULT_IMAGE_MASK_NAME, self._foreground_mask)
-        # TODO: delete
-        cv2.imwrite(DIRECTORY + now + "place_" + DEFAULT_IMAGE_MASK_NAME, self._tmp_place_foreground_mask)
-        cv2.imwrite(DIRECTORY + now + "object_" + DEFAULT_IMAGE_MASK_NAME, self._tmp_object_foreground_mask)
-
