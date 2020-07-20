@@ -115,7 +115,7 @@ class Video:
         """ Создать маску для определения места, где находится объект """
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         return cv2.morphologyEx(
-            self._foreground_mask, cv2.MORPH_OPEN, kernel
+            self._foreground_mask.copy(), cv2.MORPH_OPEN, kernel
         )
     
     def _produce_place_framing_rectangles(self, place_foreground_mask):
@@ -140,10 +140,14 @@ class Video:
     
     def _process_foreground_mask(self):
         """ Обработать маску текущего кадра """
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        self._foreground_mask = cv2.morphologyEx(
+            self._foreground_mask.copy(), cv2.MORPH_CLOSE, kernel
+        )
         kornel_size = (3, 3)
         sigma = 1
         self._foreground_mask = cv2.GaussianBlur(
-            self._foreground_mask, kornel_size, sigma
+            self._foreground_mask.copy(), kornel_size, sigma
         )
 
 
