@@ -5,53 +5,321 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "run",
+            "name": "! run drone_10_39.mp4 | интернет поле березки",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4"]
+            "args": [
+                "-v",
+                "test_video/any/drone_10_39.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {            
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
         },
         {
-            "name": "run any with mask",
+            "name": "! run 152.mp4 | поле около универа",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/any/drone_10_39.mp4", "-shm", "True"]
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605114152.mp4",
+                "-shm",
+                "True"
+            ]
         },
         {
-            "name": "run with mask",
+            "name": "run save 152.mp4",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True"]
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605114152.mp4",
+                "-shm",
+                "True",
+                "-sv",
+                "True"
+            ]
         },
         {
-            "name": "run save with mask",
+            "name": "run short 152.mp4",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4", "-shm", "True", "-sv", "True"]
+            "args": [
+                "-v",
+                "test_video/cutting/ch02_20200605114152 (online-video-cutter.com) (1).mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {            
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
         },
         {
-            "name": "run short with mask",
+            "name": "! run 220.mp4 | дома заволгой",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/cutting/ch02_20200605114152 (online-video-cutter.com) (1).mp4", "-shm", "True"]
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch01_20200703114220.mp4",
+                "-shm",
+                "True"
+            ]
         },
         {
-            "name": "run2 with mask",
+            "name": "run save 220.mp4",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/uniyar2/ch01_20200703114220.mp4", "-shm", "True"]
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch01_20200703114220.mp4",
+                "-shm",
+                "True",
+                "-sv",
+                "True"
+            ]
+        },
+        {            
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
         },
         {
-            "name": "run2 save with mask",
+            "name": "run drone_01_26.mp4 | интернет",
             "type": "python",
             "request": "launch",
             "module": "processing_video",
-            "args": ["-v", "test_video/uniyar2/ch01_20200703114220.mp4", "-shm", "True", "-sv", "True"]
+            "args": [
+                "-v",
+                "test_video/any/drone_01_26.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run drone_02_27.mp4 | интернет",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/any/drone_02_27.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run drone_12_35.mp4 | интернет",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/any/drone_12_35.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {            
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
+        },
+        {
+            "name": "run 041.mp4 | деревья около универа",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605110041.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 226.mp4 | ветер",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605110226.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 506.mp4 | смена света",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605110506.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 935.mp4 | освещение",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605110935.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 709.mp4 | поле дрон чайки",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605113709.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 731.mp4 | облака",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605115731.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 410.mp4 | корпус дрон",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch01_20200605121410.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 136.mp4 | хождение людей перенос дрона",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605110136.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 754.mp4 | дрон на газоне дрон в небе",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605113754.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 548.mp4 | корпус дрон",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605121548.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 002.mp4 | дрон на фоне корпуса",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar/ch02_20200605123002.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {            
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
+        },
+        {
+            "name": "run 057.mp4 | берег волги изменение освещения мухи",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch01_20200703110057.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 241.mp4 | берег дрон переворот камеры дома люди дрон",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch01_20200703110241.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 833.mp4 | берег дрон птички",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch02_20200703105833.mp4",
+                "-shm",
+                "True"
+            ]
+        },
+        {
+            "name": "run 323.mp4 | тряска берег дома дрон птички",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": [
+                "-v",
+                "test_video/uniyar2/ch02_20200703112323.mp4",
+                "-shm",
+                "True"
+            ]
         }
     ]
 }
