@@ -1,6 +1,5 @@
-test_video
 venv
 *.pyc
-*.png
 
+test_video
 saving

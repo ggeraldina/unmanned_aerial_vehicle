@@ -28,7 +28,7 @@ https://drive.google.com/drive/folders/1nZNIsMh_c6lci8_yOeuPsb9hxv9oZToR?usp=sha
 
 ### Пример работы программы
 
-<div style="text-align:center"><img alt="Дрон" src="images/drone00.jpg" width="100%" vspace="15" hspace="15"></div>
+<div style="text-align:center"><img alt="Дрон" src="readme_images/drone00.png" width="100%" vspace="15" hspace="15"></div>
 
-<div style="text-align:center"><img alt="Дрон" src="images/drone01.jpg" width="100%" vspace="15" hspace="15"></div>
+<div style="text-align:center"><img alt="Дрон" src="readme_images/drone01.png" width="100%" vspace="15" hspace="15"></div>
 
