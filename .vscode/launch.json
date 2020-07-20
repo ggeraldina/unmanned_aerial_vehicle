@@ -12,6 +12,13 @@
             "args": ["-v", "test_video/uniyar/ch02_20200605114152.mp4"]
         },
         {
+            "name": "run any with mask",
+            "type": "python",
+            "request": "launch",
+            "module": "processing_video",
+            "args": ["-v", "test_video/any/drone_10_39.mp4", "-shm", "True"]
+        },
+        {
             "name": "run with mask",
             "type": "python",
             "request": "launch",
