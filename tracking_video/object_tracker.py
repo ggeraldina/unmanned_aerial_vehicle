@@ -34,9 +34,7 @@ tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
 initBB = None
 
 if not args.get("video", False):
-    print("[INFO] starting video stream...")
-    vs = VideoStream(src=0).start()
-    time.sleep(1.0)
+    print("Нужно указать путь к видео. Параметр -v или --video.")
 else:
     vs = cv2.VideoCapture(args["video"])
 
@@ -45,7 +43,7 @@ fps = None
 
 while True:
     frame = vs.read()
-    frame = frame[1] if args.get("video", False) else frame
+    frame = frame[1]
     if frame is None:
         break
     frame = imutils.resize(frame, width=1000)
@@ -69,6 +67,7 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
             )
     cv2.imshow("Frame", frame)
+
     key = cv2.waitKey(1) & 0xFF
     if key == ord("s"):
         initBB = cv2.selectROI(
@@ -78,8 +77,7 @@ while True:
         fps = FPS().start()
     elif key == ord("q"):
         break
-if not args.get("video", False):
-    vs.stop()
-else:
-    vs.release()
+
+vs.release()
+
 cv2.destroyAllWindows()
