@@ -39,6 +39,8 @@ if not args.get("video", False):
     time.sleep(1.0)
 else:
     vs = cv2.VideoCapture(args["video"])
+
+# Счетчик кадров в секунду
 fps = None
 
 while True:
@@ -47,7 +49,7 @@ while True:
     if frame is None:
         break
     frame = imutils.resize(frame, width=1000)
-    (H, W) = frame.shape[:2]
+    (height, width) = frame.shape[:2]
     if initBB is not None:
         (success, box) = tracker.update(frame)
         if success:
@@ -63,7 +65,7 @@ while True:
         for (i, (k, v)) in enumerate(info):
             text = "{}: {}".format(k, v)
             cv2.putText(
-                frame, text, (10, H - ((i * 20) + 20)),
+                frame, text, (10, height - ((i * 20) + 20)),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
             )
     cv2.imshow("Frame", frame)
