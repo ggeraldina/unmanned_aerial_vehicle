@@ -14,7 +14,7 @@ from .constants import *
 def run(path, tracker_name):
     tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
 
-    vs = cv2.VideoCapture(path)
+    capture = cv2.VideoCapture(path)
 
     # Окаймляющий прямоугольник (x, y, w, h)
     rectangle = None
@@ -23,7 +23,7 @@ def run(path, tracker_name):
     fps = None
 
     while True:
-        frame = vs.read()
+        frame = capture.read()
         frame = frame[1]
         if frame is None:
             break
@@ -63,6 +63,6 @@ def run(path, tracker_name):
         elif key == ord("q"):
             break
 
-    vs.release()
+    capture.release()
 
     cv2.destroyAllWindows()
