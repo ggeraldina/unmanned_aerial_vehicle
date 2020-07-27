@@ -70,9 +70,13 @@ while True:
 
     key = cv2.waitKey(1) & 0xFF
     if key == ord("s"):
+        old_initBB = initBB
         initBB = cv2.selectROI(
             "Frame", frame, fromCenter=False, showCrosshair=True
         )
+        if not old_initBB is None:
+            tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
+                   
         tracker.init(frame, initBB)
         fps = FPS().start()
     elif key == ord("q"):
