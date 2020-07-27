@@ -330,8 +330,7 @@
             "name": "csrt tracking",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
+            "module": "tracking_video",
             "args": [
                 "--video",
                 "test_video/uniyar/ch02_20200605114152.mp4",
