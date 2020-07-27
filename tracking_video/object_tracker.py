@@ -16,7 +16,8 @@ def run(path, tracker_name):
 
     vs = cv2.VideoCapture(path)
 
-    initBB = None
+    # Окаймляющий прямоугольник (x, y, w, h)
+    rectangle = None
 
     # Счетчик кадров в секунду
     fps = None
@@ -28,7 +29,7 @@ def run(path, tracker_name):
             break
         frame = imutils.resize(frame, width=1000)
         (height, width) = frame.shape[:2]
-        if initBB is not None:
+        if rectangle is not None:
             (success, box) = tracker.update(frame)
             if success:
                 (x, y, w, h) = [int(v) for v in box]
@@ -50,14 +51,14 @@ def run(path, tracker_name):
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord("s"):
-            old_initBB = initBB
-            initBB = cv2.selectROI(
+            old_initBB = rectangle
+            rectangle = cv2.selectROI(
                 "Frame", frame, fromCenter=False, showCrosshair=True
             )
             if not old_initBB is None:
                 tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
                     
-            tracker.init(frame, initBB)
+            tracker.init(frame, rectangle)
             fps = FPS().start()
         elif key == ord("q"):
             break
