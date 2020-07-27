@@ -16,7 +16,7 @@
                 "True"
             ]
         },
-        {            
+        {
             "name": " — ",
             "type": "python",
             "request": "launch",
@@ -59,7 +59,7 @@
                 "True"
             ]
         },
-        {            
+        {
             "name": " — ",
             "type": "python",
             "request": "launch",
@@ -90,7 +90,7 @@
                 "True"
             ]
         },
-        {            
+        {
             "name": " — ",
             "type": "python",
             "request": "launch",
@@ -131,7 +131,7 @@
                 "True"
             ]
         },
-        {            
+        {
             "name": " — ",
             "type": "python",
             "request": "launch",
@@ -268,7 +268,7 @@
                 "True"
             ]
         },
-        {            
+        {
             "name": " — ",
             "type": "python",
             "request": "launch",
@@ -319,6 +319,24 @@
                 "test_video/uniyar2/ch02_20200703112323.mp4",
                 "-shm",
                 "True"
+            ]
+        },
+        {
+            "name": " — ",
+            "type": "python",
+            "request": "launch",
+        },
+        {
+            "name": "csrt tracking",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--video",
+                "test_video/uniyar/ch02_20200605114152.mp4",
+                "--tracker",
+                "csrt"
             ]
         }
     ]
