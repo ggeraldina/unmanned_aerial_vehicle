@@ -46,7 +46,7 @@ while True:
     frame = frame[1] if args.get("video", False) else frame
     if frame is None:
         break
-    frame = imutils.resize(frame, width=500)
+    frame = imutils.resize(frame, width=1000)
     (H, W) = frame.shape[:2]
     if initBB is not None:
         (success, box) = tracker.update(frame)
