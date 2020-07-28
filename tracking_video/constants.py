@@ -10,6 +10,9 @@ OPENCV_OBJECT_TRACKERS = {
     "mosse": cv2.TrackerMOSSE_create
 }
 
+DIRECTORY_SAVING = "saving/"
+DEFAULT_IMAGE_NAME = "Tracker_frame_video.png"
+
 DEFAULT_FRAME_WINDOW_NAME = "Frame"
 WINDOW_WIDTH = 1000
 

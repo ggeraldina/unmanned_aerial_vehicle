@@ -1,3 +1,6 @@
+import datetime
+import os
+
 from imutils.video import FPS
 import imutils
 import cv2
@@ -118,9 +121,21 @@ class Tracker:
             return EXIT_SUCCESS
         if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
             return EXIT_SUCCESS
+        if key == ord("s"):
+            self._save_frame()
         elif key == ord("a"):
             self._select_rectangle()
         return CONTINUE_PROCESSING
+        
+    def _save_frame(self):
+        """ Сохранить кадр """
+        try:
+            os.makedirs(DIRECTORY_SAVING)
+        except OSError:
+            pass
+        now = datetime.datetime.now()
+        now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
+        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
 
     def _select_rectangle(self):
         """ Выбрать область для трекинга """
