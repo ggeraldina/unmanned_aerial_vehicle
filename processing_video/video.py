@@ -38,7 +38,7 @@ class Video:
     _foreground_mask: array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
         Маска кадра
 
-    Если был передан флаг сохранения видео:
+    Если был передан флаг сохранения видео saving_videos:
     _out_video: VideoWriter
         Видео с контурами
     _out_video_mask: VideoWriter
@@ -51,17 +51,19 @@ class Video:
         self._showing_mask = showing_mask
         self._capture = cv2.VideoCapture(self._path)
         self._init_characteristics()
+        if self._saving_videos:
+            self._init_out_video()
 
     def _init_characteristics(self):
         """ Инициализировать характеристики:
                 текущий первый кадр, 
-                высота и ширина кадра, 
+                высота и ширина кадра,
+                маска,
                 результат с видео
         """
         _, self._current_frame = self._capture.read()
         self._frame_height, self._frame_width, _ = self._current_frame.shape
-        if self._saving_videos:
-            self._init_out_video()
+        self._foreground_mask = None
 
     def _init_out_video(self):
         """ Инициализировать атрибуты с видео результатом """
