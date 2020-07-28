@@ -62,13 +62,16 @@ class Tracker:
         if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:        
             return EXIT_SUCCESS
         elif key == ord("a"):
-            old_rectangle = self._rectangle
-            self._rectangle = cv2.selectROI(
-                "Frame", self._current_frame, fromCenter=False, showCrosshair=True
-            )
-            if not old_rectangle is None:
-                self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
-                    
-            self._tracker.init(self._current_frame, self._rectangle)
-            self._fps = FPS().start()
+            self._select_rectangle()
         return CONTINUE_PROCESSING
+
+
+    def _select_rectangle(self):
+        old_rectangle = self._rectangle
+        self._rectangle = cv2.selectROI(
+            "Frame", self._current_frame, fromCenter=False, showCrosshair=True
+        )
+        if not old_rectangle is None:
+            self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()                
+        self._tracker.init(self._current_frame, self._rectangle)
+        self._fps = FPS().start()
