@@ -11,6 +11,7 @@ class Tracker:
         self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._capture = cv2.VideoCapture(path)
         _, self._current_frame = self._capture.read()
+        self._current_frame = imutils.resize(self._current_frame, width=WINDOW_WIDTH)
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         # Окаймляющий прямоугольник (x, y, w, h)
         self._rectangle = None
@@ -21,21 +22,8 @@ class Tracker:
         while True:
             if self._current_frame is None:
                 break
-            self._current_frame = imutils.resize(self._current_frame, width=1000)
-            if self._rectangle is not None:
-                (success, box) = self._tracker.update(self._current_frame)
-                if success:
-                    (x, y, w, h) = [int(v) for v in box]
-                    cv2.rectangle(self._current_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                self._fps.update()
-                self._fps.stop()
-                info = self._create_info(success)
-                for (i, (key, value)) in enumerate(info):
-                    text = "{}: {}".format(key, value)
-                    cv2.putText(
-                        self._current_frame, text, (10, self._frame_height - ((i * 20) + 20)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
-                    )
+            self._current_frame = imutils.resize(self._current_frame, width=WINDOW_WIDTH)
+            self._drow_information_text()
             cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)            
             if self._check_commands() == EXIT_SUCCESS:
                 break
@@ -43,7 +31,23 @@ class Tracker:
         self._capture.release()
         cv2.destroyAllWindows()
 
-    def _create_info(self, success):        
+    def _drow_information_text(self):
+        if self._rectangle is not None:
+            (success, box) = self._tracker.update(self._current_frame)
+            if success:
+                (x, y, w, h) = [int(v) for v in box]
+                cv2.rectangle(self._current_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            self._fps.update()
+            self._fps.stop()
+            info = self._create_information_text(success)
+            for (i, (key, value)) in enumerate(info):
+                text = "{}: {}".format(key, value)
+                cv2.putText(
+                    self._current_frame, text, (10, self._frame_height - ((i * 20) + 20)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
+                )
+
+    def _create_information_text(self, success):        
         return [
             ("Tracker", self._tracker),
             ("Success", "Yes" if success else "No"),
