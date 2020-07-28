@@ -78,7 +78,7 @@ class Tracker:
                 (x, y, w, h) = [int(v) for v in box]
                 cv2.rectangle(
                     self._current_frame, (x, y),
-                    (x + w, y + h), (0, 255, 0), 2
+                    (x + w, y + h), (0, 0, 255), 2
                 )
             self._fps.update()
             self._fps.stop()
