@@ -9,3 +9,9 @@ OPENCV_OBJECT_TRACKERS = {
     "medianflow": cv2.TrackerMedianFlow_create,
     "mosse": cv2.TrackerMOSSE_create
 }
+
+DEFAULT_FRAME_WINDOW_NAME = "Frame"
+
+EXIT_SUCCESS = 0
+# EXIT_FAILURE = 1
+CONTINUE_PROCESSING = 2

@@ -6,58 +6,67 @@ from .constants import *
 
 class Tracker:
 
+    def __init__(self):
+        self._tracker = None
+        self._current_frame = None
+        # Окаймляющий прямоугольник (x, y, w, h)
+        self._rectangle = None
+        # Счетчик кадров в секунду
+        self._fps = None
+
     def run(self, path, tracker_name):
-        tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
+        self._tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
 
         capture = cv2.VideoCapture(path)
 
-        # Окаймляющий прямоугольник (x, y, w, h)
-        rectangle = None
-
-        # Счетчик кадров в секунду
-        fps = None
-
         while True:
-            frame = capture.read()
-            frame = frame[1]
-            if frame is None:
+            _, self._current_frame = capture.read()
+            if self._current_frame is None:
                 break
-            frame = imutils.resize(frame, width=1000)
-            (height, width) = frame.shape[:2]
-            if rectangle is not None:
-                (success, box) = tracker.update(frame)
+            self._current_frame = imutils.resize(self._current_frame, width=1000)
+            (height, width) = self._current_frame.shape[:2]
+            if self._rectangle is not None:
+                (success, box) = self._tracker.update(self._current_frame)
                 if success:
                     (x, y, w, h) = [int(v) for v in box]
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                fps.update()
-                fps.stop()
+                    cv2.rectangle(self._current_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                self._fps.update()
+                self._fps.stop()
                 info = [
-                    ("Tracker", tracker),
+                    ("Tracker", self._tracker),
                     ("Success", "Yes" if success else "No"),
-                    ("FPS", "{:.2f}".format(fps.fps())),
+                    ("FPS", "{:.2f}".format(self._fps.fps())),
                 ]
                 for (i, (k, v)) in enumerate(info):
                     text = "{}: {}".format(k, v)
                     cv2.putText(
-                        frame, text, (10, height - ((i * 20) + 20)),
+                        self._current_frame, text, (10, height - ((i * 20) + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
                     )
-            cv2.imshow("Frame", frame)
+            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
 
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord("s"):
-                old_initBB = rectangle
-                rectangle = cv2.selectROI(
-                    "Frame", frame, fromCenter=False, showCrosshair=True
-                )
-                if not old_initBB is None:
-                    tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
-                        
-                tracker.init(frame, rectangle)
-                fps = FPS().start()
-            elif key == ord("q"):
-                break
+            
+            if self._check_commands() == EXIT_SUCCESS:
+                break            
 
         capture.release()
-
         cv2.destroyAllWindows()
+
+    def _check_commands(self):
+        key = cv2.waitKey(30) & 0xFF
+        # Esc - выход
+        if key == 27:
+            return EXIT_SUCCESS
+        if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:        
+            return EXIT_SUCCESS
+        elif key == ord("a"):
+            old_rectangle = self._rectangle
+            self._rectangle = cv2.selectROI(
+                "Frame", self._current_frame, fromCenter=False, showCrosshair=True
+            )
+            if not old_rectangle is None:
+                self._tracker = OPENCV_OBJECT_TRACKERS[tracker_name]()
+                    
+            self._tracker.init(self._current_frame, self._rectangle)
+            self._fps = FPS().start()
+        return CONTINUE_PROCESSING
