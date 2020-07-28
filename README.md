@@ -51,6 +51,24 @@ https://drive.google.com/drive/folders/1nZNIsMh_c6lci8_yOeuPsb9hxv9oZToR?usp=sha
 
 Нажать клавишу `a`; Выбрать с помощью мыши объект, нажать `enter`.
 
+### Сохранить кадр
+
+Нажать клавишу `s`; Сохранено будет в папке saving.
+
 ### Выход
 
 Нажать клавишу `Esc` или закрыть окно.
+
+## Пример работы программы
+
+После инциализации
+
+<div style="text-align:center"><img alt="Трекинг" src="readme_images/tracker00.png" width="100%" vspace="15" hspace="15"></div>
+
+Трекинг
+
+<div style="text-align:center"><img alt="Трекинг" src="readme_images/tracker01.png" width="100%" vspace="15" hspace="15"></div>
+
+Объект "потерялся"
+
+<div style="text-align:center"><img alt="Трекинг" src="readme_images/tracker02.png" width="100%" vspace="15" hspace="15"></div>
