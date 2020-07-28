@@ -10,7 +10,8 @@ class Tracker:
         self._tracker_name = tracker_name
         self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._capture = cv2.VideoCapture(path)
-        self._current_frame = None
+        _, self._current_frame = self._capture.read()
+        self._frame_height, self._frame_width = self._current_frame.shape[:2]
         # Окаймляющий прямоугольник (x, y, w, h)
         self._rectangle = None
         # Счетчик кадров в секунду
@@ -18,11 +19,9 @@ class Tracker:
 
     def run(self):
         while True:
-            _, self._current_frame = self._capture.read()
             if self._current_frame is None:
                 break
             self._current_frame = imutils.resize(self._current_frame, width=1000)
-            (height, width) = self._current_frame.shape[:2]
             if self._rectangle is not None:
                 (success, box) = self._tracker.update(self._current_frame)
                 if success:
@@ -34,12 +33,13 @@ class Tracker:
                 for (i, (key, value)) in enumerate(info):
                     text = "{}: {}".format(key, value)
                     cv2.putText(
-                        self._current_frame, text, (10, height - ((i * 20) + 20)),
+                        self._current_frame, text, (10, self._frame_height - ((i * 20) + 20)),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
                     )
             cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)            
             if self._check_commands() == EXIT_SUCCESS:
                 break
+            _, self._current_frame = self._capture.read()            
         self._capture.release()
         cv2.destroyAllWindows()
 
