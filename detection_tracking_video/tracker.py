@@ -152,5 +152,6 @@ class Tracker:
         self._fps = FPS().start()
 
     def _clear_boxes(self):
+        """ Очистить все выбранные прямоугольники """
         self._trackers = cv2.MultiTracker_create()
         self._count_box = 0
