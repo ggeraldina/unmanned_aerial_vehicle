@@ -72,7 +72,7 @@ class Tracker:
                 self._current_frame, width=WINDOW_WIDTH
             )
             self._foreground_mask = background_subtractor.apply(self._current_frame)
-            if amount_frame == 1 or amount_frame % 5000:
+            if amount_frame == 4 or amount_frame % 10 == 0:
                 boxes = self._detect_framing_boxes()
                 self._track_boxes(boxes)
             self._drow_information_text()
@@ -179,7 +179,7 @@ class Tracker:
         boxes: [(int, int, int, int)...]
             Выбранные области
         """
-        self._clear_boxes()
+        # self._clear_boxes()
         for box in boxes:
             self._count_box += 1
             tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
