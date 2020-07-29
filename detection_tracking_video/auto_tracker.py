@@ -30,7 +30,7 @@ class AutoTracker:
     ----------
     _tracker_name: str
         Название трекера
-    _trackers: [TrackerXXX...]
+    _trackers: TrackerList
         Трекеры
     _capture: VideoCapture
         Видео, 
