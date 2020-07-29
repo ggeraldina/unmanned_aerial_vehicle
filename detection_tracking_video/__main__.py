@@ -1,5 +1,7 @@
 import argparse
 
+from .tracker import Tracker
+
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--video", type=str, help="path to input video file")
@@ -11,4 +13,5 @@ args = vars(parse())
 if not args.get("video", False):
     print("Нужно указать путь к видео. Параметр -v или --video.")
 else:
-    pass
+    tracker = Tracker(args["video"], args["tracker"])
+    tracker.run()
