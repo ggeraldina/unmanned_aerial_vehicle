@@ -1,6 +1,6 @@
 import argparse
 
-from .multitracker import MultiTracker
+from .multi_tracker import MultiTracker
 
 def parse():
     parser = argparse.ArgumentParser()
