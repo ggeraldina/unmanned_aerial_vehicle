@@ -127,6 +127,8 @@ class Tracker:
             self._save_frame()
         elif key == ord("a"):
             self._select_box()
+        elif key == ord("c"):
+            self._clear_boxes()
         return CONTINUE_PROCESSING
         
     def _save_frame(self):
@@ -148,3 +150,7 @@ class Tracker:
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add(tracker, self._current_frame, box)
         self._fps = FPS().start()
+
+    def _clear_boxes(self):
+        self._trackers = cv2.MultiTracker_create()
+        self._count_box = 0
