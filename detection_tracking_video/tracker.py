@@ -39,8 +39,8 @@ class Tracker:
         Высота кадра, 
     _frame_width: int
         Ширина кадра
-    _rectangles: (int, int, int, int)
-        Окаймляющие прямоугольники [(x, y, w, h)...]
+    _count_box: int
+        Количество прямоугольников
     _fps: float
         Счетчик кадров в секунду
     """
@@ -54,7 +54,7 @@ class Tracker:
             self._current_frame, width=WINDOW_WIDTH
         )
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
-        self._rectangles = []
+        self._count_box = 0
         self._fps = None
 
     def run(self):
@@ -75,7 +75,7 @@ class Tracker:
 
     def _drow_information_text(self):
         """ Отобразить информацию о трекинге """
-        if not self._rectangles:
+        if self._count_box == 0:
             return
         (success, boxes) = self._trackers.update(self._current_frame)
         if success:
@@ -144,7 +144,7 @@ class Tracker:
         box = cv2.selectROI(
             "Frame", self._current_frame, fromCenter=False, showCrosshair=True
         )
-        self._rectangles.append(box)
+        self._count_box += 1
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add(tracker, self._current_frame, box)
         self._fps = FPS().start()
