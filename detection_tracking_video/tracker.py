@@ -146,7 +146,8 @@ class Tracker:
     def _select_box(self):
         """ Выбрать область для трекинга """
         box = cv2.selectROI(
-            "Frame", self._current_frame, fromCenter=False, showCrosshair=True
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
+            fromCenter=False, showCrosshair=True
         )
         self._count_box += 1
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()

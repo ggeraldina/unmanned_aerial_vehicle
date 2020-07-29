@@ -128,7 +128,7 @@ class Tracker:
         elif key == ord("a"):
             self._select_rectangle()
         return CONTINUE_PROCESSING
-        
+
     def _save_frame(self):
         """ Сохранить кадр """
         try:
@@ -137,13 +137,17 @@ class Tracker:
             pass
         now = datetime.datetime.now()
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
-        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
+        cv2.imwrite(
+            DIRECTORY_SAVING + now +
+            DEFAULT_IMAGE_NAME, self._current_frame
+        )
 
     def _select_rectangle(self):
         """ Выбрать область для трекинга """
         old_rectangle = self._rectangle
         self._rectangle = cv2.selectROI(
-            "Frame", self._current_frame, fromCenter=False, showCrosshair=True
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
+            fromCenter=False, showCrosshair=True
         )
         if not old_rectangle is None:
             self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()

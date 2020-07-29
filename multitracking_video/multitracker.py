@@ -8,7 +8,7 @@ import cv2
 from .constants import *
 
 
-class Tracker:
+class MultiTracker:
     """ Поиск и отображение движущихся объектов на видео
 
     Parameters
@@ -82,7 +82,7 @@ class Tracker:
             for box in boxes:
                 (x, y, w, h) = [int(v) for v in box]
                 cv2.rectangle(
-                    self._current_frame, (x, y), 
+                    self._current_frame, (x, y),
                     (x + w, y + h), (0, 255, 0), 2
                 )
         self._fps.update()
@@ -130,7 +130,7 @@ class Tracker:
         elif key == ord("c"):
             self._clear_boxes()
         return CONTINUE_PROCESSING
-        
+
     def _save_frame(self):
         """ Сохранить кадр """
         try:
@@ -139,12 +139,16 @@ class Tracker:
             pass
         now = datetime.datetime.now()
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
-        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
+        cv2.imwrite(
+            DIRECTORY_SAVING + now +
+            DEFAULT_IMAGE_NAME, self._current_frame
+        )
 
     def _select_box(self):
         """ Выбрать область для трекинга """
         box = cv2.selectROI(
-            "Frame", self._current_frame, fromCenter=False, showCrosshair=True
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
+            fromCenter=False, showCrosshair=True
         )
         self._count_box += 1
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()

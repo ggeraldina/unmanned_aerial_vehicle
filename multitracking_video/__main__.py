@@ -13,5 +13,5 @@ args = vars(parse())
 if not args.get("video", False):
     print("Нужно указать путь к видео. Параметр -v или --video.")
 else:
-    tracker = Tracker(args["video"], args["tracker"])
+    tracker = MultiTracker(args["video"], args["tracker"])
     tracker.run()
