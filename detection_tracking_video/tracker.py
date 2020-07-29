@@ -39,6 +39,8 @@ class Tracker:
         Высота кадра, 
     _frame_width: int
         Ширина кадра
+    _foreground_mask: array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
+        Маска кадра
     _count_box: int
         Количество прямоугольников
     _fps: float
@@ -54,24 +56,135 @@ class Tracker:
             self._current_frame, width=WINDOW_WIDTH
         )
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
+        self._foreground_mask = None
         self._count_box = 0
         self._fps = None
 
     def run(self):
         """ Выполнить трекинг объектов на видео """
+        amount_frame = 1        
+        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(history=3, backgroundRatio = 0.95)
+
         while True:
             if self._current_frame is None:
                 break
             self._current_frame = imutils.resize(
                 self._current_frame, width=WINDOW_WIDTH
             )
+            self._foreground_mask = background_subtractor.apply(self._current_frame)
+            if amount_frame == 1 or amount_frame % 5000:
+                boxes = self._detect_framing_boxes()
+                self._track_boxes(boxes)
             self._drow_information_text()
             cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
             if self._check_commands() == EXIT_SUCCESS:
                 break
             _, self._current_frame = self._capture.read()
+            amount_frame += 1
         self._capture.release()
         cv2.destroyAllWindows()
+
+    def _detect_framing_boxes(self):
+        """ Детектировать области на текущем кадре """
+        place_foreground_mask = self._produce_place_foreground_mask()
+        place_framing_rectangles = self._produce_place_framing_rectangles(place_foreground_mask)
+        self._process_foreground_mask()
+        contours, hierarchy = cv2.findContours(
+            self._foreground_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        )
+        return self._produce_framing_boxes(contours, place_framing_rectangles)
+
+    def _produce_place_foreground_mask(self):
+        """ Создать маску для определения места, где находится объект """
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        return cv2.morphologyEx(
+            self._foreground_mask.copy(), cv2.MORPH_OPEN, kernel
+        )
+    
+    def _produce_place_framing_rectangles(self, place_foreground_mask):
+        """ Вычислить окаймляющие прямоугольники для маски места 
+        Parameters
+        ----------
+        place_foreground_mask:  array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
+            Маска локации
+        Returns
+        -------
+        [(x1, y1, x2, y2), ...] - Координаты углов прямоугольников
+        """        
+        contours, _ = cv2.findContours(
+            place_foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+        )
+        place_framing_rectangles = []
+        for contour in contours:
+            (x, y, w, h) = cv2.boundingRect(contour)
+            place_framing_rectangles.append((x, y, x + w, y + h))
+        return place_framing_rectangles
+    
+    def _process_foreground_mask(self):
+        """ Обработать маску текущего кадра """
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        self._foreground_mask = cv2.morphologyEx(
+            self._foreground_mask.copy(), cv2.MORPH_CLOSE, kernel
+        )
+        kornel_size = (3, 3)
+        sigma = 1
+        self._foreground_mask = cv2.GaussianBlur(
+            self._foreground_mask.copy(), kornel_size, sigma
+        )
+    
+    def _produce_framing_boxes(self, contours, place_framing_rectangles):
+        """ Нарисовать объемлющие прямоугольники 
+        вокруг движущихся объектов и их количество
+        Parameters
+        ----------
+        contours:  [array([[[int, int],...]], dtype=int32)]
+            Контуры объектов 
+        place_framing_rectangles: [(x1, y1, x2, y2), ...]
+            Координаты углов прямоугольников 
+
+        Returns
+        -------
+        [(x, y, w, h)...] - Выбранные области
+        """
+        boxes = []
+        rectangle_color = (0, 0, 255)
+        for contour in contours:
+            selected = False
+            x1, y1, w, h = cv2.boundingRect(contour)
+            x2, y2 = x1 + w, y1 + h
+            for rec in place_framing_rectangles:
+                if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):                    
+                    if(not selected):
+                        boxes.append((x1, y1, w, h))                   
+                        selected = True
+        return boxes
+
+    def _is_intersecting_rectangles(self, first_rectangle, second_rectangle):
+        """ Пересекаются ли прямоугольники         
+        Returns
+        -------
+        True / False - пересекаются ли прямоугольники
+        """
+        r1_x1, r1_y1, r1_x2, r1_y2 = first_rectangle
+        r2_x1, r2_y1, r2_x2, r2_y2 = second_rectangle
+        if(r1_x1 > r2_x2 or r1_x2 < r2_x1 or r1_y1 > r2_y2 or r1_y2 < r2_y1):
+            return False
+        return True
+
+    def _track_boxes(self, boxes):
+        """ Отследить области для трекинга
+        
+        Parameters
+        ----------
+        boxes: [(int, int, int, int)...]
+            Выбранные области
+        """
+        self._clear_boxes()
+        for box in boxes:
+            self._count_box += 1
+            tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+            self._trackers.add(tracker, self._current_frame, box)
+        self._fps = FPS().start()
 
     def _drow_information_text(self):
         """ Отобразить информацию о трекинге """
@@ -98,6 +211,10 @@ class Tracker:
 
     def _create_information_text(self, success):
         """ Создать информацию о трекинге для текущего кадра 
+        Parameters
+        ----------
+        success: bool
+
         Returns
         -------
         [(str, str), ...] - [(Название характеристики, значение)...]
