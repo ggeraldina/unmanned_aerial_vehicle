@@ -342,6 +342,18 @@
             "name": "csrt multi_tracking",
             "type": "python",
             "request": "launch",
+            "module": "multitracking_video",
+            "args": [
+                "--video",
+                "test_video/uniyar/ch02_20200605114152.mp4",
+                "--tracker",
+                "csrt"
+            ]
+        },
+        {
+            "name": "csrt detection_tracking",
+            "type": "python",
+            "request": "launch",
             "module": "detection_tracking_video",
             "args": [
                 "--video",
