@@ -5,6 +5,7 @@ from imutils.video import FPS
 import imutils
 import cv2
 
+from .tracker_list import TrackerList
 from .constants import *
 
 
@@ -49,7 +50,7 @@ class AutoTracker:
 
     def __init__(self, path_video, tracker_name):
         self._tracker_name = tracker_name
-        self._trackers = cv2.MultiTracker_create()
+        self._trackers = TrackerList()
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
         self._current_frame = imutils.resize(
@@ -273,5 +274,5 @@ class AutoTracker:
 
     def _clear_boxes(self):
         """ Очистить все выбранные прямоугольники """
-        self._trackers = cv2.MultiTracker_create()
+        self._trackers = TrackerList()
         self._count_box = 0
