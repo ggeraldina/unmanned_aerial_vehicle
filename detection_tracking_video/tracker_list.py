@@ -51,7 +51,30 @@ class TrackerList:
                 self._current_boxes[i] = box
                 return
         self._trackers.append(tracker)
+
+    def delete(self, box):
+        """ Удалить объект из отслеживаемых 
         
+        Parameters
+        ----------        
+        box: (int, int, int, int)
+            (x, y, w, h) - характеристики области
+
+        Returns
+        -------
+        int - Количество удаленных трекеров
+        """
+        amount_del_trackers = 0
+        x1, y1, w, h = box
+        x2, y2 = x1 + w, y1 + h        
+        for i, current_box in enumerate(self._current_boxes):
+            x1_2, y1_2, w_2, h_2 = current_box
+            x2_2, y2_2 = x1_2 + w_2, y1_2 + h_2
+            if is_intersecting_rectangles((x1, y1, x2, y2), (x1_2, y1_2, x2_2, y2_2)):
+                del self._trackers[i - amount_del_trackers]
+                del self._current_boxes[i - amount_del_trackers]
+                amount_del_trackers += 1
+        return amount_del_trackers
 
     def update(self, frame):
         """ Обновить трекеры
