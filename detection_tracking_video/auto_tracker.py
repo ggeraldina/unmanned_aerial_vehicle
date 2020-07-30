@@ -43,8 +43,6 @@ class AutoTracker:
         Ширина кадра
     _foreground_mask: array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
         Маска кадра
-    _count_box: int
-        Количество прямоугольников
     _fps: float
         Счетчик кадров в секунду
     """
@@ -59,7 +57,6 @@ class AutoTracker:
         )
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         self._foreground_mask = None
-        self._count_box = 0
         self._fps = None
 
     def run(self):
@@ -74,7 +71,7 @@ class AutoTracker:
                 self._current_frame, width=WINDOW_WIDTH
             )
             self._foreground_mask = background_subtractor.apply(self._current_frame)
-            if self._count_box == 0 or amount_frame % 10 == 0:
+            if self._trackers.get_count_current_boxes() == 0 or amount_frame % 10 == 0:
                 boxes = self._detect_framing_boxes()
                 self._track_boxes(boxes)
             self._drow_information_text()
@@ -170,14 +167,13 @@ class AutoTracker:
         """
         # self._clear_boxes()
         for box in boxes:
-            self._count_box += 1
             tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
             self._trackers.add_with_update(tracker, self._current_frame, box)
         self._fps = FPS().start()
 
     def _drow_information_text(self):
         """ Отобразить информацию о трекинге """
-        if self._count_box == 0:
+        if self._trackers.get_count_current_boxes() == 0:
             return
         (success, boxes) = self._trackers.update(self._current_frame)
         color = (0, 0, 255)
@@ -214,7 +210,7 @@ class AutoTracker:
         """
         return [
             ("Tracker", self._tracker_name),
-            ("Count", self._count_box),
+            ("Count", self._trackers.get_count_current_boxes()),
             ("Success", "Yes" if success else "No"),
             ("FPS", "{:.2f}".format(self._fps.fps())),
         ]
@@ -264,7 +260,6 @@ class AutoTracker:
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
             fromCenter=False, showCrosshair=True
         )
-        self._count_box += 1
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add(tracker, self._current_frame, box)
 
@@ -276,7 +271,6 @@ class AutoTracker:
         )
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add_with_update(tracker, self._current_frame, box)
-        self._count_box = self._trackers.get_count_current_boxes()
 
     def _delete_box(self):
         """ Удалить трекинг для всех объектов из выделенной области """
@@ -284,10 +278,8 @@ class AutoTracker:
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
             fromCenter=False, showCrosshair=True
         )
-        amount_del_trackers = self._trackers.delete(box)
-        self._count_box -= amount_del_trackers
+        self._trackers.delete(box)
 
     def _clear_boxes(self):
         """ Очистить все выбранные прямоугольники """
         self._trackers = TrackerList()
-        self._count_box = 0

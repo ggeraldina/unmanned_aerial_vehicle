@@ -27,6 +27,7 @@ class TrackerList:
         """
         tracker.init(frame, box)
         self._trackers.append(tracker)
+        self._current_boxes.append(box)
 
     def add_with_update(self, tracker, frame, box):
         """ Добавить или обновить трекер 
@@ -59,6 +60,7 @@ class TrackerList:
                 update_tracker = True
         if not update_tracker:
             self._trackers.append(tracker)
+            self._current_boxes.append(box)
 
     def delete(self, box):
         """ Удалить объект из отслеживаемых 
