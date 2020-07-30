@@ -239,6 +239,8 @@ class AutoTracker:
             self._save_frame()
         elif key == ord("a"):
             self._select_box()
+        elif key == ord("x"):
+            self._update_box()
         elif key == ord("d"):
             self._delete_box()
         elif key == ord("c"):
@@ -264,7 +266,16 @@ class AutoTracker:
         self._count_box += 1
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add(tracker, self._current_frame, box)
-        self._fps = FPS().start()
+
+    def _update_box(self):
+        """ Обновить область для трекинга """
+        box = cv2.selectROI(
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
+            fromCenter=False, showCrosshair=True
+        )
+        tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+        self._trackers.add_with_update(tracker, self._current_frame, box)
+        self._count_box = self._trackers.get_count_current_boxes()
 
     def _delete_box(self):
         """ Удалить трекинг для всех объектов из выделенной области """

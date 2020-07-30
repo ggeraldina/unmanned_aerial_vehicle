@@ -40,6 +40,8 @@ class TrackerList:
         box: (int, int, int, int)
             (x, y, w, h) - характеристики прямоугольника
         """
+        update_tracker = False
+        amount_del_trackers = 0
         tracker.init(frame, box)
         x1, y1, w, h = box
         x2, y2 = x1 + w, y1 + h
@@ -47,10 +49,16 @@ class TrackerList:
             x1_2, y1_2, w_2, h_2 = current_box
             x2_2, y2_2 = x1_2 + w_2, y1_2 + h_2
             if is_intersecting_rectangles((x1, y1, x2, y2), (x1_2, y1_2, x2_2, y2_2)):
-                self._trackers[i] = tracker
+                if update_tracker:
+                    del self._trackers[i - amount_del_trackers]
+                    del self._current_boxes[i - amount_del_trackers]
+                    amount_del_trackers += 1
+                    continue
+                self._trackers[i - amount_del_trackers] = tracker
                 self._current_boxes[i] = box
-                return
-        self._trackers.append(tracker)
+                update_tracker = True
+        if not update_tracker:
+            self._trackers.append(tracker)
 
     def delete(self, box):
         """ Удалить объект из отслеживаемых 
@@ -96,5 +104,8 @@ class TrackerList:
                 boxes_success = False
             self._current_boxes.append(box)
         return boxes_success, self._current_boxes
+
+    def get_count_current_boxes(self):
+        return self._current_boxes.__len__()
 
             
