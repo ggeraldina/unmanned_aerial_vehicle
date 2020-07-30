@@ -106,6 +106,7 @@ class TrackerList:
         return boxes_success, self._current_boxes
 
     def get_count_current_boxes(self):
+        """ Вернуть количество отсеживаемых объектов """
         return self._current_boxes.__len__()
 
             

@@ -199,7 +199,7 @@ class AutoTracker:
             cv2.putText(
                 self._current_frame, text,
                 (10, self._frame_height - ((i * 20) + 20)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1
             )
 
     def _create_information_text(self, success):
@@ -214,6 +214,7 @@ class AutoTracker:
         """
         return [
             ("Tracker", self._tracker_name),
+            ("Count", self._count_box),
             ("Success", "Yes" if success else "No"),
             ("FPS", "{:.2f}".format(self._fps.fps())),
         ]
