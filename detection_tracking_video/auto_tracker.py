@@ -7,6 +7,7 @@ import cv2
 
 from .tracker_list import TrackerList
 from .constants import *
+from .utils import is_intersecting_rectangles
 
 
 class AutoTracker:
@@ -140,8 +141,8 @@ class AutoTracker:
         ----------
         contours:  [array([[[int, int],...]], dtype=int32)]
             Контуры объектов 
-        place_framing_rectangles: [(x1, y1, x2, y2), ...]
-            Координаты углов прямоугольников 
+        place_framing_rectangles: [(int, int, int, int), ...]
+            Координаты углов прямоугольников (x1, y1, x2, y2)
 
         Returns
         -------
@@ -153,23 +154,11 @@ class AutoTracker:
             x1, y1, w, h = cv2.boundingRect(contour)
             x2, y2 = x1 + w, y1 + h
             for rec in place_framing_rectangles:
-                if(self._is_intersecting_rectangles(rec, (x1, y1, x2, y2))):                    
+                if(is_intersecting_rectangles(rec, (x1, y1, x2, y2))):                    
                     if(not selected):
                         boxes.append((x1, y1, w, h))                   
                         selected = True
         return boxes
-
-    def _is_intersecting_rectangles(self, first_rectangle, second_rectangle):
-        """ Пересекаются ли прямоугольники         
-        Returns
-        -------
-        True / False - пересекаются ли прямоугольники
-        """
-        r1_x1, r1_y1, r1_x2, r1_y2 = first_rectangle
-        r2_x1, r2_y1, r2_x2, r2_y2 = second_rectangle
-        if(r1_x1 > r2_x2 or r1_x2 < r2_x1 or r1_y1 > r2_y2 or r1_y2 < r2_y1):
-            return False
-        return True
 
     def _track_boxes(self, boxes):
         """ Отследить области для трекинга
@@ -183,7 +172,7 @@ class AutoTracker:
         for box in boxes:
             self._count_box += 1
             tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
-            self._trackers.add(tracker, self._current_frame, box)
+            self._trackers.add_with_update(tracker, self._current_frame, box)
         self._fps = FPS().start()
 
     def _drow_information_text(self):
