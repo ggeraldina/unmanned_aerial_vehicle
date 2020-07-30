@@ -148,7 +148,6 @@ class AutoTracker:
         [(x, y, w, h)...] - Выбранные области
         """
         boxes = []
-        rectangle_color = (0, 0, 255)
         for contour in contours:
             selected = False
             x1, y1, w, h = cv2.boundingRect(contour)
@@ -192,12 +191,16 @@ class AutoTracker:
         if self._count_box == 0:
             return
         (success, boxes) = self._trackers.update(self._current_frame)
+        color = (0, 0, 255)
+        last_box_index = boxes.__len__() - 1
         if success:
-            for box in boxes:
+            for i, box in enumerate(boxes):
                 (x, y, w, h) = [int(v) for v in box]
                 cv2.rectangle(
                     self._current_frame, (x, y), 
-                    (x + w, y + h), (0, 0, 255), 1
+                    (x + w, y + h), 
+                    color if not i == last_box_index else (0, 225, 0), 
+                    1
                 )
         self._fps.update()
         self._fps.stop()
@@ -207,7 +210,7 @@ class AutoTracker:
             cv2.putText(
                 self._current_frame, text,
                 (10, self._frame_height - ((i * 20) + 20)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2
             )
 
     def _create_information_text(self, success):
