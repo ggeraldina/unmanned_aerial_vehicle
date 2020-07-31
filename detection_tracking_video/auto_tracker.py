@@ -235,9 +235,11 @@ class AutoTracker:
         if key == ord("s"):
             self._save_frame()
         elif key == ord("a"):
-            self._select_box()
+            self._add_box()
         elif key == ord("x"):
             self._update_box()
+        elif key == ord("z"):
+            self._auto_all_update_box()        
         elif key == ord("d"):
             self._delete_box()
         elif key == ord("c"):
@@ -254,7 +256,7 @@ class AutoTracker:
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
         cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
 
-    def _select_box(self):
+    def _add_box(self):
         """ Выбрать область для трекинга """
         box = cv2.selectROI(
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
@@ -271,6 +273,12 @@ class AutoTracker:
         )
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add_with_update(tracker, self._current_frame, box)
+
+    def _auto_all_update_box(self):
+        """ Автоматически обновить область для трекинга """        
+        self._clear_boxes()
+        boxes = self._detect_framing_boxes()
+        self._track_boxes(boxes)
 
     def _delete_box(self):
         """ Удалить трекинг для всех объектов из выделенной области """
