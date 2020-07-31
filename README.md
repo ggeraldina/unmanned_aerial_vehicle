@@ -80,3 +80,32 @@ https://drive.google.com/drive/folders/1nZNIsMh_c6lci8_yOeuPsb9hxv9oZToR?usp=sha
 Объект "потерялся"
 
 <div style="text-align:center"><img alt="Трекинг" src="readme_images/tracker02.png" width="100%" vspace="15" hspace="15"></div>
+
+---
+
+## Детекция и трекинг объектов на видео
+
+### Запуск
+
+`>python -m detection_tracking_video --video test_video/any/car_evening.mp4 --tracker csrt --saving_videos False`
+
+### Параметры
+
+* `-v`, `--video` - Путь к видео - **Обязательный праметр**
+* `-t`, `--tracker` - Название трекера. Возможные значения "csrt", "kcf", "boosting", "mil", "tld", "medianflow", "mosse". По умолчанию *kcf*.
+* `-sv`, `--saving_videos` - Сохранять видео. Возможные значения *True  / False*. По умолчанию *False*; Сохранено будет в папке saving.
+
+### Клавиши
+
+* `s` - Сохранить кадр; Сохранено будет в папке saving.
+* `a` - Добавить объект для трекинга; Выбрать с помощью мыши объект, нажать * `enter`.
+* `x` - Изменить область одного из объектов трекинга; Выбрать с помощью мыши объект, нажать `enter`.
+* `z` - Очистить и обновить объекты трекинга.
+* `d` - Удалить трекинг для всех объектов из выделенной области; Выбрать с помощью мыши объект, нажать `enter`.
+* `c` - Удалить трекинг для всех объектов.
+
+## Пример работы программы
+
+<div style="text-align:center"><img alt="Трекинг" src="readme_images/detection_and_tracking.png" width="100%" vspace="15" hspace="15"></div>
+
+
