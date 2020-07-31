@@ -61,8 +61,10 @@ class AutoTracker:
 
     def run(self):
         """ Выполнить трекинг объектов на видео """
-        amount_frame = 1        
-        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(history=3, backgroundRatio = 0.95)
+        amount_frame = 1
+        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(
+            history=3, backgroundRatio=0.95
+        )
 
         while True:
             if self._current_frame is None:
@@ -70,7 +72,9 @@ class AutoTracker:
             self._current_frame = imutils.resize(
                 self._current_frame, width=WINDOW_WIDTH
             )
-            self._foreground_mask = background_subtractor.apply(self._current_frame)
+            self._foreground_mask = background_subtractor.apply(
+                self._current_frame
+            )
             if self._trackers.get_count_current_boxes() == 0 or amount_frame % 10 == 0:
                 boxes = self._detect_framing_boxes()
                 self._track_boxes(boxes)
@@ -86,7 +90,9 @@ class AutoTracker:
     def _detect_framing_boxes(self):
         """ Детектировать области на текущем кадре """
         place_foreground_mask = self._produce_place_foreground_mask()
-        place_framing_rectangles = self._produce_place_framing_rectangles(place_foreground_mask)
+        place_framing_rectangles = self._produce_place_framing_rectangles(
+            place_foreground_mask
+        )
         self._process_foreground_mask()
         contours, hierarchy = cv2.findContours(
             self._foreground_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
@@ -99,7 +105,7 @@ class AutoTracker:
         return cv2.morphologyEx(
             self._foreground_mask.copy(), cv2.MORPH_OPEN, kernel
         )
-    
+
     def _produce_place_framing_rectangles(self, place_foreground_mask):
         """ Вычислить окаймляющие прямоугольники для маски места 
         Parameters
@@ -109,7 +115,7 @@ class AutoTracker:
         Returns
         -------
         [(x1, y1, x2, y2), ...] - Координаты углов прямоугольников
-        """        
+        """
         contours, _ = cv2.findContours(
             place_foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
@@ -118,7 +124,7 @@ class AutoTracker:
             (x, y, w, h) = cv2.boundingRect(contour)
             place_framing_rectangles.append((x, y, x + w, y + h))
         return place_framing_rectangles
-    
+
     def _process_foreground_mask(self):
         """ Обработать маску текущего кадра """
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
@@ -130,7 +136,7 @@ class AutoTracker:
         self._foreground_mask = cv2.GaussianBlur(
             self._foreground_mask.copy(), kornel_size, sigma
         )
-    
+
     def _produce_framing_boxes(self, contours, place_framing_rectangles):
         """ Нарисовать объемлющие прямоугольники 
         вокруг движущихся объектов и их количество
@@ -151,15 +157,15 @@ class AutoTracker:
             x1, y1, w, h = cv2.boundingRect(contour)
             x2, y2 = x1 + w, y1 + h
             for rec in place_framing_rectangles:
-                if(is_intersecting_rectangles(rec, (x1, y1, x2, y2))):                    
+                if(is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
                     if(not selected):
-                        boxes.append((x1, y1, w, h))                   
+                        boxes.append((x1, y1, w, h))
                         selected = True
         return boxes
 
     def _track_boxes(self, boxes):
         """ Отследить области для трекинга
-        
+
         Parameters
         ----------
         boxes: [(int, int, int, int)...]
@@ -182,9 +188,9 @@ class AutoTracker:
             for i, box in enumerate(boxes):
                 (x, y, w, h) = [int(v) for v in box]
                 cv2.rectangle(
-                    self._current_frame, (x, y), 
-                    (x + w, y + h), 
-                    color if not i == last_box_index else (0, 225, 0), 
+                    self._current_frame, (x, y),
+                    (x + w, y + h),
+                    color if not i == last_box_index else (0, 225, 0),
                     1
                 )
         self._fps.update()
@@ -239,13 +245,13 @@ class AutoTracker:
         elif key == ord("x"):
             self._update_box()
         elif key == ord("z"):
-            self._auto_all_update_box()        
+            self._auto_all_update_box()
         elif key == ord("d"):
             self._delete_box()
         elif key == ord("c"):
             self._clear_boxes()
         return CONTINUE_PROCESSING
-        
+
     def _save_frame(self):
         """ Сохранить кадр """
         try:
@@ -254,12 +260,15 @@ class AutoTracker:
             pass
         now = datetime.datetime.now()
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))
-        cv2.imwrite(DIRECTORY_SAVING + now + DEFAULT_IMAGE_NAME, self._current_frame)
+        cv2.imwrite(
+            DIRECTORY_SAVING + now +
+            DEFAULT_IMAGE_NAME, self._current_frame
+        )
 
     def _add_box(self):
         """ Выбрать область для трекинга """
         box = cv2.selectROI(
-            DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
         )
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
@@ -268,14 +277,14 @@ class AutoTracker:
     def _update_box(self):
         """ Обновить область для трекинга """
         box = cv2.selectROI(
-            DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
         )
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add_with_update(tracker, self._current_frame, box)
 
     def _auto_all_update_box(self):
-        """ Автоматически обновить область для трекинга """        
+        """ Автоматически обновить область для трекинга """
         self._clear_boxes()
         boxes = self._detect_framing_boxes()
         self._track_boxes(boxes)
@@ -283,7 +292,7 @@ class AutoTracker:
     def _delete_box(self):
         """ Удалить трекинг для всех объектов из выделенной области """
         box = cv2.selectROI(
-            DEFAULT_FRAME_WINDOW_NAME, self._current_frame, 
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
         )
         self._trackers.delete(box)

@@ -1,5 +1,7 @@
 from .utils import is_intersecting_rectangles
-class TrackerList: 
+
+
+class TrackerList:
     """ Трекеры
 
     Attributes
@@ -9,13 +11,14 @@ class TrackerList:
     _current_boxes: [(int, int, int, int)...]
         Текущие отслеживаемые области
     """
+
     def __init__(self):
         self._trackers = []
         self._current_boxes = []
 
     def add(self, tracker, frame, box):
         """ Добавить трекер 
-        
+
         Parameters
         ----------
         tracker: TrackerXXX
@@ -31,7 +34,7 @@ class TrackerList:
 
     def add_with_update(self, tracker, frame, box):
         """ Добавить или обновить трекер 
-        
+
         Parameters
         ----------
         tracker: TrackerXXX
@@ -64,7 +67,7 @@ class TrackerList:
 
     def delete(self, box):
         """ Удалить объект из отслеживаемых 
-        
+
         Parameters
         ----------        
         box: (int, int, int, int)
@@ -76,7 +79,7 @@ class TrackerList:
         """
         amount_del_trackers = 0
         x1, y1, w, h = box
-        x2, y2 = x1 + w, y1 + h        
+        x2, y2 = x1 + w, y1 + h
         for i, current_box in enumerate(self._current_boxes):
             x1_2, y1_2, w_2, h_2 = current_box
             x2_2, y2_2 = x1_2 + w_2, y1_2 + h_2
@@ -110,5 +113,3 @@ class TrackerList:
     def get_count_current_boxes(self):
         """ Вернуть количество отсеживаемых объектов """
         return self._current_boxes.__len__()
-
-            

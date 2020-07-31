@@ -1,6 +1,6 @@
 def is_intersecting_rectangles(first_rectangle, second_rectangle):
     """ Пересекаются ли прямоугольники 
-        
+
         Parameters
         ----------
         first_rectangle : (int, int, int, int)

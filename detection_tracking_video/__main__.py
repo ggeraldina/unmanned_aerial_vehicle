@@ -2,10 +2,15 @@ import argparse
 
 from .auto_tracker import AutoTracker
 
+
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--video", type=str, help="path to input video file")
-    parser.add_argument("-t", "--tracker", type=str, default="kcf", help="OpenCV object tracker type")
+    parser.add_argument(
+        "-v", "--video", type=str, help="path to input video file"
+    )
+    parser.add_argument(
+        "-t", "--tracker", type=str, default="kcf", help="OpenCV object tracker type"
+    )
     return parser.parse_args()
 
 
