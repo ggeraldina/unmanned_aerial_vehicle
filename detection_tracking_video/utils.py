@@ -14,6 +14,6 @@ def is_intersecting_rectangles(first_rectangle, second_rectangle):
     """
     r1_x1, r1_y1, r1_x2, r1_y2 = first_rectangle
     r2_x1, r2_y1, r2_x2, r2_y2 = second_rectangle
-    if(r1_x1 > r2_x2 or r1_x2 < r2_x1 or r1_y1 > r2_y2 or r1_y2 < r2_y1):
+    if r1_x1 > r2_x2 or r1_x2 < r2_x1 or r1_y1 > r2_y2 or r1_y2 < r2_y1:
         return False
     return True

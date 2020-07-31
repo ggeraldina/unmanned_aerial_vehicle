@@ -157,8 +157,8 @@ class AutoTracker:
             x1, y1, w, h = cv2.boundingRect(contour)
             x2, y2 = x1 + w, y1 + h
             for rec in place_framing_rectangles:
-                if(is_intersecting_rectangles(rec, (x1, y1, x2, y2))):
-                    if(not selected):
+                if is_intersecting_rectangles(rec, (x1, y1, x2, y2)):
+                    if not selected:
                         boxes.append((x1, y1, w, h))
                         selected = True
         return boxes
