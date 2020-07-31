@@ -45,6 +45,8 @@ class AutoTracker:
         Маска кадра
     _fps: float
         Счетчик кадров в секунду
+    _update_manually: bool
+        Обновление вручную
     """
 
     def __init__(self, path_video, tracker_name):
@@ -58,6 +60,7 @@ class AutoTracker:
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         self._foreground_mask = None
         self._fps = None
+        self._update_manually = False
 
     def run(self):
         """ Выполнить трекинг объектов на видео """
@@ -75,9 +78,10 @@ class AutoTracker:
             self._foreground_mask = background_subtractor.apply(
                 self._current_frame
             )
-            if self._trackers.get_count_current_boxes() == 0 or amount_frame % 10 == 0:
+            if self._trackers.get_count_current_boxes() == 0 or amount_frame % 10 == 0 or self._update_manually:
                 boxes = self._detect_framing_boxes()
                 self._track_boxes(boxes)
+                self._update_manually = False
             self._drow_information_text()
             cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
             if self._check_commands() == EXIT_SUCCESS:
@@ -245,7 +249,7 @@ class AutoTracker:
         elif key == ord("x"):
             self._update_box()
         elif key == ord("z"):
-            self._auto_all_update_box()
+            self._update_manually_boxes()
         elif key == ord("d"):
             self._delete_box()
         elif key == ord("c"):
@@ -283,11 +287,10 @@ class AutoTracker:
         tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._trackers.add_with_update(tracker, self._current_frame, box)
 
-    def _auto_all_update_box(self):
+    def _update_manually_boxes(self):
         """ Автоматически обновить область для трекинга """
         self._clear_boxes()
-        boxes = self._detect_framing_boxes()
-        self._track_boxes(boxes)
+        self._update_manually = True
 
     def _delete_box(self):
         """ Удалить трекинг для всех объектов из выделенной области """
