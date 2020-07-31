@@ -46,10 +46,14 @@ class AutoTracker:
     _fps: float
         Счетчик кадров в секунду
     _update_manually: bool
-        Обновление вручную
+        Обновление вручную    
+
+    Если был передан флаг сохранения видео saving_videos:
+    _out_video: VideoWriter
+        Видео с контурами
     """
 
-    def __init__(self, path_video, tracker_name):
+    def __init__(self, path_video, tracker_name, saving_videos=False):
         self._tracker_name = tracker_name
         self._trackers = TrackerList()
         self._capture = cv2.VideoCapture(path_video)
@@ -60,7 +64,25 @@ class AutoTracker:
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         self._foreground_mask = None
         self._fps = None
-        self._update_manually = False
+        self._update_manually = False        
+        self._saving_videos = saving_videos
+        if self._saving_videos:
+            self._init_out_video()
+
+    def _init_out_video(self):
+        """ Инициализировать атрибуты с видео результатом """
+        try:
+            os.makedirs(DIRECTORY_SAVING)
+        except OSError:
+            pass
+        now = datetime.datetime.now()
+        now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))     
+        framerate = 10
+        self._out_video = cv2.VideoWriter(
+            DIRECTORY_SAVING + now + DEFAULT_VIDEO_NAME, 
+            cv2.VideoWriter_fourcc(*"mp4v"),
+            framerate, (self._frame_width, self._frame_height)
+        )
 
     def run(self):
         """ Выполнить трекинг объектов на видео """
@@ -83,7 +105,8 @@ class AutoTracker:
                 self._track_boxes(boxes)
                 self._update_manually = False
             self._drow_information_text()
-            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
+            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)            
+            self._save_video()
             if self._check_commands() == EXIT_SUCCESS:
                 break
             _, self._current_frame = self._capture.read()
@@ -303,3 +326,8 @@ class AutoTracker:
     def _clear_boxes(self):
         """ Очистить все выбранные прямоугольники """
         self._trackers = TrackerList()
+    
+    def _save_video(self):
+        """ Сохранить результат """
+        if self._saving_videos:
+            self._out_video.write(self._current_frame)
