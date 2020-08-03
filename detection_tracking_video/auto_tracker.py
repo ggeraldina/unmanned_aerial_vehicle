@@ -101,7 +101,9 @@ class AutoTracker:
 
         while True:
             if self._current_frame is None:
-                break
+                break            
+            self._fps = FPS().start()
+            self._fps.update()
             self._current_frame = imutils.resize(
                 self._current_frame, width=WINDOW_WIDTH
             )
@@ -229,7 +231,6 @@ class AutoTracker:
         for box in boxes:
             tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
             self._trackers.add_with_update(tracker, self._current_frame, box)
-        self._fps = FPS().start()
 
     def _drow_rectangles(self):
         """ Отобразить информацию о трекинге 
@@ -260,8 +261,6 @@ class AutoTracker:
         ----------
         success: bool
         """
-        self._fps.update()
-        self._fps.stop()
         info = self._create_information_text(success)
         for (i, (key, value)) in enumerate(info):
             text = "{}: {}".format(key, value)
@@ -282,6 +281,7 @@ class AutoTracker:
         -------
         [(str, str), ...] - [(Название характеристики, значение)...]
         """
+        self._fps.stop()
         return [
             ("Tracker", self._tracker_name),
             ("Count", self._trackers.get_count_current_boxes()),
@@ -357,7 +357,6 @@ class AutoTracker:
 
     def _update_manually_boxes(self):
         """ Автоматически обновить область для трекинга """
-        self._clear_boxes()
         self._update_manually = True
 
     def _delete_box(self):
