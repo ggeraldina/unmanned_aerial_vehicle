@@ -7,7 +7,7 @@ import cv2
 
 from .tracker_list import TrackerList
 from .constants import *
-from .utils import is_intersecting_rectangles
+from .utils import is_intersecting_boxes
 
 
 class AutoTracker:
@@ -46,7 +46,11 @@ class AutoTracker:
     _fps: float
         Счетчик кадров в секунду
     _update_manually: bool
-        Обновление вручную    
+        Обновление вручную
+    _tracking_area: (int, int, int, int)
+        (x, y, w, h) - характеристики прямоугольника
+    _exception_area: [(int, int, int, int), ...]
+        (x, y, w, h) - характеристики прямоугольника
 
     Если был передан флаг сохранения видео saving_videos:
     _out_video: VideoWriter
@@ -64,7 +68,9 @@ class AutoTracker:
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         self._foreground_mask = None
         self._fps = None
-        self._update_manually = False        
+        self._update_manually = False
+        self._tracking_area = (0, 0, self._frame_width, self._frame_height)
+        self._exception_area = []  
         self._saving_videos = saving_videos
         if self._saving_videos:
             self._init_out_video()
@@ -117,14 +123,33 @@ class AutoTracker:
     def _detect_framing_boxes(self):
         """ Детектировать области на текущем кадре """
         place_foreground_mask = self._produce_place_foreground_mask()
-        place_framing_rectangles = self._produce_place_framing_rectangles(
+        place_framing_boxes = self._produce_place_framing_boxes(
             place_foreground_mask
         )
         self._process_foreground_mask()
         contours, hierarchy = cv2.findContours(
             self._foreground_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
         )
-        return self._produce_framing_boxes(contours, place_framing_rectangles)
+        boxes =  self._produce_framing_boxes(contours, place_framing_boxes)
+        result_boxes = []
+        for box in boxes:
+            if self._is_box_in_area(box):
+                result_boxes.append(box)
+        return result_boxes
+
+    def _is_box_in_area(self, box):
+        """ Входит ли выделеннный объект в область отслеживания
+        
+        Returns
+        -------
+        True / False - Входит / Нет
+        """
+        if not is_intersecting_boxes(box, self._tracking_area):
+            return False
+        for ex_area in self._exception_area:
+            if is_intersecting_boxes(box, ex_area):
+                return False
+        return True
 
     def _produce_place_foreground_mask(self):
         """ Создать маску для определения места, где находится объект """
@@ -133,7 +158,7 @@ class AutoTracker:
             self._foreground_mask.copy(), cv2.MORPH_OPEN, kernel
         )
 
-    def _produce_place_framing_rectangles(self, place_foreground_mask):
+    def _produce_place_framing_boxes(self, place_foreground_mask):
         """ Вычислить окаймляющие прямоугольники для маски места 
         Parameters
         ----------
@@ -141,16 +166,15 @@ class AutoTracker:
             Маска локации
         Returns
         -------
-        [(x1, y1, x2, y2), ...] - Координаты углов прямоугольников
+        [(x1, y1, w, h), ...] - Координаты углов прямоугольников
         """
         contours, _ = cv2.findContours(
             place_foreground_mask.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
-        place_framing_rectangles = []
+        place_framing_boxes = []
         for contour in contours:
-            (x, y, w, h) = cv2.boundingRect(contour)
-            place_framing_rectangles.append((x, y, x + w, y + h))
-        return place_framing_rectangles
+            place_framing_boxes.append(cv2.boundingRect(contour))
+        return place_framing_boxes
 
     def _process_foreground_mask(self):
         """ Обработать маску текущего кадра """
@@ -164,15 +188,15 @@ class AutoTracker:
             self._foreground_mask.copy(), kornel_size, sigma
         )
 
-    def _produce_framing_boxes(self, contours, place_framing_rectangles):
+    def _produce_framing_boxes(self, contours, place_framing_boxes):
         """ Нарисовать объемлющие прямоугольники 
         вокруг движущихся объектов и их количество
         Parameters
         ----------
         contours:  [array([[[int, int],...]], dtype=int32)]
             Контуры объектов 
-        place_framing_rectangles: [(int, int, int, int), ...]
-            Координаты углов прямоугольников (x1, y1, x2, y2)
+        place_framing_boxes: [(int, int, int, int), ...]
+            Координаты углов прямоугольников (x1, y1, w, h)
 
         Returns
         -------
@@ -182,9 +206,8 @@ class AutoTracker:
         for contour in contours:
             selected = False
             x1, y1, w, h = cv2.boundingRect(contour)
-            x2, y2 = x1 + w, y1 + h
-            for rec in place_framing_rectangles:
-                if is_intersecting_rectangles(rec, (x1, y1, x2, y2)):
+            for box in place_framing_boxes:
+                if is_intersecting_boxes(box, (x1, y1, w, h)):
                     if not selected:
                         boxes.append((x1, y1, w, h))
                         selected = True
@@ -277,6 +300,10 @@ class AutoTracker:
             self._delete_box()
         elif key == ord("c"):
             self._clear_boxes()
+        elif key == ord("f"):
+            self._add_tracking_area()
+        elif key == ord("g"):
+            self._add_exception_area()
         return CONTINUE_PROCESSING
 
     def _save_frame(self):
@@ -326,6 +353,24 @@ class AutoTracker:
     def _clear_boxes(self):
         """ Очистить все выбранные прямоугольники """
         self._trackers = TrackerList()
+
+    def _add_tracking_area(self):        
+        box = cv2.selectROI(
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
+            fromCenter=False, showCrosshair=True
+        )
+        if box == (0, 0, 0, 0):
+            return
+        self._tracking_area = box
+
+    def _add_exception_area(self):       
+        box = cv2.selectROI(
+            DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
+            fromCenter=False, showCrosshair=True
+        )
+        if box == (0, 0, 0, 0):
+            return
+        self._exception_area.append(box)
     
     def _save_video(self):
         """ Сохранить результат """

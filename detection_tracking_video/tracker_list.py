@@ -1,4 +1,4 @@
-from .utils import is_intersecting_rectangles
+from .utils import is_intersecting_boxes
 
 
 class TrackerList:
@@ -51,12 +51,8 @@ class TrackerList:
         update_tracker = False
         amount_del_trackers = 0
         tracker.init(frame, box)
-        x1, y1, w, h = box
-        x2, y2 = x1 + w, y1 + h
         for i, current_box in enumerate(self._current_boxes):
-            x1_2, y1_2, w_2, h_2 = current_box
-            x2_2, y2_2 = x1_2 + w_2, y1_2 + h_2
-            if is_intersecting_rectangles((x1, y1, x2, y2), (x1_2, y1_2, x2_2, y2_2)):
+            if is_intersecting_boxes(box, current_box):
                 if update_tracker:
                     del self._trackers[i - amount_del_trackers]
                     del self._current_boxes[i - amount_del_trackers]
@@ -82,12 +78,8 @@ class TrackerList:
         int - Количество удаленных трекеров
         """
         amount_del_trackers = 0
-        x1, y1, w, h = box
-        x2, y2 = x1 + w, y1 + h
         for i, current_box in enumerate(self._current_boxes):
-            x1_2, y1_2, w_2, h_2 = current_box
-            x2_2, y2_2 = x1_2 + w_2, y1_2 + h_2
-            if is_intersecting_rectangles((x1, y1, x2, y2), (x1_2, y1_2, x2_2, y2_2)):
+            if is_intersecting_boxes(box, current_box):
                 del self._trackers[i - amount_del_trackers]
                 del self._current_boxes[i - amount_del_trackers]
                 amount_del_trackers += 1
