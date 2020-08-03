@@ -28,6 +28,8 @@ class TrackerList:
         box: (int, int, int, int)
             (x, y, w, h) - характеристики прямоугольника
         """
+        if box == (0, 0, 0, 0):
+            return
         tracker.init(frame, box)
         self._trackers.append(tracker)
         self._current_boxes.append(box)
@@ -44,6 +46,8 @@ class TrackerList:
         box: (int, int, int, int)
             (x, y, w, h) - характеристики прямоугольника
         """
+        if box == (0, 0, 0, 0):
+            return
         update_tracker = False
         amount_del_trackers = 0
         tracker.init(frame, box)
