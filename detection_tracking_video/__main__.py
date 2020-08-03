@@ -12,7 +12,7 @@ def parse():
         "-t", "--tracker", type=str, default="kcf", help="OpenCV object tracker type"
     )    
     parser.add_argument(
-        "-sv", "--saving_videos", type=bool, default="False", help="saving video"
+        "-sv", "--saving_videos", type=bool, default=False, help="saving video"
     )
     return parser.parse_args()
 
