@@ -40,17 +40,19 @@ class AutoTracker:
     _frame_height: int
         Высота кадра, 
     _frame_width: int
-        Ширина кадра
+        Ширина кадра,
     _foreground_mask: array([[0, 0, 0, ..., 0, 0, 0],..., dtype=uint8)
-        Маска кадра
+        Маска кадра,
     _fps: float
-        Счетчик кадров в секунду
+        Счетчик кадров в секунду,
     _update_manually: bool
         Обновление вручную
     _tracking_area: (int, int, int, int)
-        (x, y, w, h) - характеристики прямоугольника
+        (x, y, w, h) - характеристики прямоугольника,
     _exception_area: [(int, int, int, int), ...]
-        (x, y, w, h) - характеристики прямоугольника
+        (x, y, w, h) - характеристики прямоугольника,
+    _saving_videos: bool
+        Флаг сохранения результата,
 
     Если был передан флаг сохранения видео saving_videos:
     _out_video: VideoWriter
