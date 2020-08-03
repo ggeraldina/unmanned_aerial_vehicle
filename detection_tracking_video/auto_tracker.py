@@ -1,4 +1,5 @@
 import datetime
+import time
 import os
 
 from imutils.video import FPS
@@ -301,6 +302,9 @@ class AutoTracker:
         CONTINUE_PROCESSING - если продолжение просмотра 
         """
         key = cv2.waitKey(30) & 0xFF
+        if not key == 255:
+            print("Press key: " + chr(key))
+            self._drow_key(chr(key))
         # Esc - выход
         if key == 27:
             return EXIT_SUCCESS
@@ -323,6 +327,16 @@ class AutoTracker:
         elif key == ord("g"):
             self._add_exception_area()
         return CONTINUE_PROCESSING
+
+    def _drow_key(self, text):
+        """ Отобразить нажатую клавишу """
+        text = "Press key: " + text
+        cv2.putText(
+            self._current_frame, text,
+            (self._frame_width - 150, self._frame_height - 20),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
+        )
+        time.sleep(1)
 
     def _save_frame(self):
         """ Сохранить кадр """
