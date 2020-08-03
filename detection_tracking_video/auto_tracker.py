@@ -112,9 +112,11 @@ class AutoTracker:
                 boxes = self._detect_framing_boxes()
                 self._track_boxes(boxes)
                 self._update_manually = False
-            self._drow_information_text()
-            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)            
+            success = self._drow_rectangles()
             self._save_video()
+            if not success is None:
+                self._drow_information_text(success)
+            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
             if self._check_commands() == EXIT_SUCCESS:
                 break
             _, self._current_frame = self._capture.read()
@@ -229,12 +231,16 @@ class AutoTracker:
             self._trackers.add_with_update(tracker, self._current_frame, box)
         self._fps = FPS().start()
 
-    def _drow_information_text(self):
-        """ Отобразить информацию о трекинге """
+    def _drow_rectangles(self):
+        """ Отобразить информацию о трекинге 
+
+        Returns
+        -------
+        success: bool - Нет ли потерянных объектов
+        """
         if self._trackers.get_count_current_boxes() == 0:
             return
         (success, boxes) = self._trackers.update(self._current_frame)
-        color = (0, 0, 255)
         last_box_index = boxes.__len__() - 1
         if success:
             for i, box in enumerate(boxes):
@@ -242,9 +248,18 @@ class AutoTracker:
                 cv2.rectangle(
                     self._current_frame, (x, y),
                     (x + w, y + h),
-                    color if not i == last_box_index else (0, 225, 0),
+                    (0, 0, 255) if not i == last_box_index else (0, 225, 0),
                     1
                 )
+        return success
+
+    def _drow_information_text(self, success):
+        """ Отобразить информацию о трекинге
+
+        Parameters
+        ----------
+        success: bool
+        """
         self._fps.update()
         self._fps.stop()
         info = self._create_information_text(success)
@@ -253,11 +268,12 @@ class AutoTracker:
             cv2.putText(
                 self._current_frame, text,
                 (10, self._frame_height - ((i * 20) + 20)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1
             )
 
     def _create_information_text(self, success):
         """ Создать информацию о трекинге для текущего кадра 
+
         Parameters
         ----------
         success: bool
