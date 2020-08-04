@@ -303,7 +303,7 @@ class AutoTracker:
         """
         key = cv2.waitKey(30) & 0xFF
         if not key == 255:
-            print("Press key: " + chr(key))
+            print(INFO_KEY[chr(key)])
         # Esc - выход
         if key == 27:
             return EXIT_SUCCESS
