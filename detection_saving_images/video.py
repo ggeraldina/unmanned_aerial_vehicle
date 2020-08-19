@@ -147,6 +147,7 @@ class Video:
         """
         amount_drawn_contours = 0
         rectangle_color = (0, 0, 255)
+        font_scale = 0.5
         clear_current_frame = self._current_frame.copy()
         for contour in contours:
             flag_drawn = False
@@ -158,6 +159,13 @@ class Video:
                         amount_drawn_contours += 1
                         cv2.rectangle(
                             self._current_frame, (x1, y1), (x2, y2), rectangle_color, thickness=2
+                        )                        
+                        cv2.putText(
+                            self._current_frame, 
+                            "num-" + str(self._count_frame) + "_" 
+                            + str(x1) + "-" + str(y1) + "_" + str(x2) + "-" + str(y2),
+                            (x1, y1 - 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, font_scale, rectangle_color, thickness=2
                         )
                         self._save_image(clear_current_frame, x1, y1, x2, y2)
                         flag_drawn = True
