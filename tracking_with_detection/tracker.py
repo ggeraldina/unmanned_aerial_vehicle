@@ -181,6 +181,7 @@ class Tracker:
             ("Tracker", self._tracker),
             ("Success", "Yes" if success else "No"),
             ("FPS", "{:.2f}".format(self._fps.fps())),
+            ("Number", self._amount_frame),
         ]
 
 
