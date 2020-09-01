@@ -192,7 +192,7 @@ class Video:
             + str(self._count_frame) + "_" 
             + str(x1) + "-" + str(y1) + "_" + str(x2) + "-" + str(y2)
             + ".jpg", 
-            cv2.resize(clear_current_frame[y1:y2, x1:x2], (150, 150))
+            cv2.resize(clear_current_frame[y1:y2, x1:x2], (224, 224))
         )       
 
 
