@@ -47,7 +47,7 @@ class Tracker:
 
     def __init__(self, path_video, tracker_name):
         self._tracker_name = tracker_name
-        self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+        self._tracker = None
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
@@ -148,12 +148,10 @@ class Tracker:
 
     def _select_rectangle(self):
         """ Выбрать область для трекинга """
-        old_rectangle = self._rectangle
         self._rectangle = cv2.selectROI(
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
         )
-        if not old_rectangle is None:
-            self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+        self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._tracker.init(self._current_frame, self._rectangle)
         self._fps = FPS().start()
