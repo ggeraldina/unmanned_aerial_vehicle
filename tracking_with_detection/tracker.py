@@ -80,23 +80,23 @@ class Tracker:
 
     def _tracking_object(self):
         """ Отобразить информацию о трекинге """
-        if self._box is not None:
-            (success, self._box) = self._tracker.update(self._current_frame)
-            print(f"{self._amount_frame} {success} - {self._box}")
-            if self._box == (0, 0, 0, 0):
-                self._box = None
-                return
-            if success:
-                self._update_box_and_tracker()
-                (x, y, w, h) = [int(v) for v in self._box]
-                cv2.rectangle(
-                    self._current_frame, (x, y),
-                    (x + w, y + h), (0, 0, 255), 2
-                )
-                print(f"update ({x}, {y}, {w}, {h})") 
-            self._fps.update()
-            self._fps.stop()
-            self._drow_information_text(success)
+        if self._box is None:
+            return
+        (success, self._box) = self._tracker.update(self._current_frame)
+        print(f"{self._amount_frame} {success} - {self._box}")
+        if not success:
+            self._box = None
+            return
+        self._update_box_and_tracker()
+        (x, y, w, h) = [int(v) for v in self._box]
+        cv2.rectangle(
+            self._current_frame, (x, y),
+            (x + w, y + h), (0, 0, 255), 2
+        )
+        print(f"update ({x}, {y}, {w}, {h})")
+        self._fps.update()
+        self._fps.stop()
+        self._drow_information_text(success)
 
 
     def _update_box_and_tracker(self):
