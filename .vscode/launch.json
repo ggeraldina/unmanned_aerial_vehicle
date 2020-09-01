@@ -393,6 +393,18 @@
                 // "-sv",
                 // "True"
             ]
+        },
+        {
+            "name": "detection_saving short 152.mp4",
+            "type": "python",
+            "request": "launch",
+            "module": "detection_saving_images",
+            "args": [
+                "-v",
+                // "test_video/cutting/ch02_20200605114152 (online-video-cutter.com) (1).mp4",
+                // "test_video/cutting/ch02_20200605114152.mp4",
+                "test_video/uniyar2/ch01_20200703114220.mp4",
+            ]
         }
     ]
 }
