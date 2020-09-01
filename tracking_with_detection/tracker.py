@@ -197,6 +197,8 @@ class Tracker:
             self._save_frame()
         elif key == ord("a"):
             self._select_box()
+        elif key == ord("d"):
+            self._delete_box()
         return CONTINUE_PROCESSING
 
 
@@ -223,3 +225,8 @@ class Tracker:
         self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._tracker.init(self._current_frame, self._box)
         self._fps = FPS().start()
+
+    
+    def _delete_box(self):
+        """ Удалить область трекинга """
+        self._box = None
