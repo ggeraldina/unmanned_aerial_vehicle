@@ -76,7 +76,7 @@ class Tracker:
             history=3, backgroundRatio=0.95
         )
         with open(self._csv_file_name, "w", newline="") as csv_file:
-            fieldnames = ["frame", "x", "y", "w", "h"]
+            fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
             while True:
@@ -234,6 +234,9 @@ class Tracker:
         self._box = cv2.selectROI(
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
+        )        
+        self._writer.writerow(
+            {"frame": self._amount_frame, "logs": "Select and update box"}
         )
         self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
         self._tracker.init(self._current_frame, self._box)
@@ -241,4 +244,7 @@ class Tracker:
 
     def _delete_box(self):
         """ Удалить область трекинга """
-        self._box = None
+        self._box = None    
+        self._writer.writerow(
+            {"frame": self._amount_frame, "logs": "Clear box"}
+        )

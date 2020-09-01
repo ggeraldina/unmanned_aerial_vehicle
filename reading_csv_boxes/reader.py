@@ -31,6 +31,8 @@ class Reader:
                     _, self._current_frame = self._capture.read()
                     self._amount_frame += 1
 
+                if not row["logs"] == "":
+                    continue
                 cv2.rectangle(
                     self._current_frame, (int(row["x"]), int(row["y"])),
                     (int(row["x"]) + int(row["w"]), int(row["y"]) + int(row["h"])),
