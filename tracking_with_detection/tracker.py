@@ -1,5 +1,6 @@
 import datetime
 import os
+import csv
 
 from imutils.video import FPS
 import imutils
@@ -62,18 +63,24 @@ class Tracker:
         background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(
             history=3, backgroundRatio = 0.95
         )
-
-        while True:
-            if self._current_frame is None:
-                break
-            self._foreground_mask = background_subtractor.apply(self._current_frame)
-            self._tracking_object()
-            cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
-            cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
-            if self._check_commands() == EXIT_SUCCESS:
-                break
-            _, self._current_frame = self._capture.read()
-            self._amount_frame += 1
+        
+        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_")) 
+        csv_file_name = DIRECTORY_SAVING + now + DEFAULT_CSV_NAME
+        with open(csv_file_name, "w", newline="") as csv_file:
+            fieldnames = ["frame", "x", "y", "w", "h"]
+            self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            self._writer.writeheader()
+            while True:
+                if self._current_frame is None:
+                    break
+                self._foreground_mask = background_subtractor.apply(self._current_frame)
+                self._tracking_object()
+                cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
+                cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
+                if self._check_commands() == EXIT_SUCCESS:
+                    break
+                _, self._current_frame = self._capture.read()
+                self._amount_frame += 1
         self._capture.release()
         cv2.destroyAllWindows()
 
@@ -93,6 +100,7 @@ class Tracker:
             self._current_frame, (x, y),
             (x + w, y + h), (0, 0, 255), 2
         )
+        self._writer.writerow({"frame": self._amount_frame, "x": x, "y": y, "w": w, "h": h})
         print(f"update ({x}, {y}, {w}, {h})")
         self._fps.update()
         self._fps.stop()
