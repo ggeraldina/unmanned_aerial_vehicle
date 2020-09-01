@@ -410,6 +410,20 @@
                 // "-sv",
                 // "True"
             ]
+        },
+        {
+            "name": "csrt reader",
+            "type": "python",
+            "request": "launch",
+            "module": "reading_csv_boxes",
+            "args": [
+                "--video",
+                "test_video/uniyar2/ch01_20200703114220.mp4",
+                "--csv",
+                "saving_csv/2020-09-01_21-05-38_ch01_20200703114220.csv",
+                // "-sv",
+                // "True"
+            ]
         }
     ]
 }
