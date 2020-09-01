@@ -47,8 +47,11 @@ class Tracker:
     """
 
     def __init__(self, path_video, tracker_name):
+        self._csv_file_name = DEFAULT_CSV_NAME
+        self._init_csv_file_name(path_video)
+        self._writer = None
         self._tracker_name = tracker_name
-        self._tracker = None
+        self._tracker = None 
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
         self._amount_frame = 1
@@ -58,15 +61,23 @@ class Tracker:
         self._fps = None
 
 
+    def _init_csv_file_name(self, path_video):
+        """ Инициализировать имя файла с разметкой """   
+        try:
+            os.makedirs(DIRECTORY_SAVING)
+        except OSError:
+            pass
+        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
+        name_video = os.path.basename(path_video).split(".")[0]
+        self._csv_file_name = DIRECTORY_SAVING + now + name_video + ".csv"
+
+
     def run(self):
         """ Выполнить трекинг объектов на видео """        
         background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(
             history=3, backgroundRatio = 0.95
-        )
-        
-        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_")) 
-        csv_file_name = DIRECTORY_SAVING + now + DEFAULT_CSV_NAME
-        with open(csv_file_name, "w", newline="") as csv_file:
+        )                
+        with open(self._csv_file_name, "w", newline="") as csv_file:
             fieldnames = ["frame", "x", "y", "w", "h"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
