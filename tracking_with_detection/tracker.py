@@ -39,7 +39,7 @@ class Tracker:
         Высота кадра, 
     _frame_width: int
         Ширина кадра
-    _rectangle: (int, int, int, int)
+    _box: (int, int, int, int)
         Окаймляющий прямоугольник (x, y, w, h)
     _fps: float
         Счетчик кадров в секунду
@@ -50,38 +50,102 @@ class Tracker:
         self._tracker = None
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
+        self._amount_frame = 1
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
-        self._rectangle = None
+        self._foreground_mask = None
+        self._box = None
         self._fps = None
 
+
     def run(self):
-        """ Выполнить трекинг объектов на видео """
+        """ Выполнить трекинг объектов на видео """        
+        background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(
+            history=3, backgroundRatio = 0.95
+        )
+
         while True:
             if self._current_frame is None:
                 break
+            self._foreground_mask = background_subtractor.apply(self._current_frame)
             self._tracking_object()
             cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
             cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
             if self._check_commands() == EXIT_SUCCESS:
                 break
             _, self._current_frame = self._capture.read()
+            self._amount_frame += 1
         self._capture.release()
         cv2.destroyAllWindows()
 
+
     def _tracking_object(self):
         """ Отобразить информацию о трекинге """
-        if self._rectangle is not None:
-            (success, box) = self._tracker.update(self._current_frame)
+        if self._box is not None:
+            (success, self._box) = self._tracker.update(self._current_frame)
+            print(f"{self._amount_frame} {success} - {self._box}")
+            if self._box == (0, 0, 0, 0):
+                self._box = None
+                return
             if success:
-                (x, y, w, h) = [int(v) for v in box]
+                self._update_box_and_tracker()
+                (x, y, w, h) = [int(v) for v in self._box]
                 cv2.rectangle(
                     self._current_frame, (x, y),
                     (x + w, y + h), (0, 0, 255), 2
                 )
+                print(f"update ({x}, {y}, {w}, {h})") 
             self._fps.update()
             self._fps.stop()
             self._drow_information_text(success)
 
+
+    def _update_box_and_tracker(self):
+        self._process_foreground_mask()
+        contours, _ = cv2.findContours(
+            self._foreground_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        )
+        for contour in contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            if(self._is_intersecting_boxes(self._box, (x, y, w, h))):
+                self._box = (x, y, w, h)              
+                self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+                self._tracker.init(self._current_frame, self._box)
+
+
+    def _is_intersecting_boxes(self, first_box, second_box):
+        """ Пересекаются ли области 
+
+            Parameters
+            ----------
+            first_rectangle : (int, int, int, int)
+                Координаты области  (x1, y1, w, h)
+            second_rectangle : (int, int, int, int)
+                Координаты области (x1, y1, w, h)
+
+            Returns
+            -------
+            True / False - пересекаются ли области
+        """
+        r1_x1, r1_y1, r1_w, r1_h = first_box
+        r2_x1, r2_y1, r2_w, r2_h = second_box
+        if r1_x1 > r2_x1 + r2_w or r1_x1 + r1_w < r2_x1 or r1_y1 > r2_y1 + r2_h or r1_y1 + r1_h < r2_y1:
+            return False
+        return True
+
+
+    def _process_foreground_mask(self):
+        """ Обработать маску текущего кадра """
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        self._foreground_mask = cv2.morphologyEx(
+            self._foreground_mask.copy(), cv2.MORPH_CLOSE, kernel
+        )
+        kornel_size = (3, 3)
+        sigma = 1
+        self._foreground_mask = cv2.GaussianBlur(
+            self._foreground_mask.copy(), kornel_size, sigma
+        )
+
+    
     def _drow_information_text(self, success):
         """ Отобразить информацию о трекинге
 
@@ -98,6 +162,7 @@ class Tracker:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
             )
 
+
     def _create_information_text(self, success):
         """ Создать информацию о трекинге для текущего кадра 
         Returns
@@ -109,6 +174,7 @@ class Tracker:
             ("Success", "Yes" if success else "No"),
             ("FPS", "{:.2f}".format(self._fps.fps())),
         ]
+
 
     def _check_commands(self):
         """ Проверить нет ли команд 
@@ -130,8 +196,9 @@ class Tracker:
         if key == ord("s"):
             self._save_frame()
         elif key == ord("a"):
-            self._select_rectangle()
+            self._select_box()
         return CONTINUE_PROCESSING
+
 
     def _save_frame(self):
         """ Сохранить кадр """
@@ -146,12 +213,13 @@ class Tracker:
             DEFAULT_IMAGE_NAME, self._current_frame
         )
 
-    def _select_rectangle(self):
+
+    def _select_box(self):
         """ Выбрать область для трекинга """
-        self._rectangle = cv2.selectROI(
+        self._box = cv2.selectROI(
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
         )
         self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
-        self._tracker.init(self._current_frame, self._rectangle)
+        self._tracker.init(self._current_frame, self._box)
         self._fps = FPS().start()
