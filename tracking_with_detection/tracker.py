@@ -51,7 +51,7 @@ class Tracker:
         self._init_csv_file_name(path_video)
         self._writer = None
         self._tracker_name = tracker_name
-        self._tracker = None 
+        self._tracker = None
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
         self._amount_frame = 1
@@ -60,23 +60,21 @@ class Tracker:
         self._box = None
         self._fps = None
 
-
     def _init_csv_file_name(self, path_video):
-        """ Инициализировать имя файла с разметкой """   
+        """ Инициализировать имя файла с разметкой """
         try:
             os.makedirs(DIRECTORY_SAVING)
         except OSError:
             pass
-        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
+        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))
         name_video = os.path.basename(path_video).split(".")[0]
         self._csv_file_name = DIRECTORY_SAVING + now + name_video + ".csv"
 
-
     def run(self):
-        """ Выполнить трекинг объектов на видео """        
+        """ Выполнить трекинг объектов на видео """
         background_subtractor = cv2.bgsegm.createBackgroundSubtractorMOG(
-            history=3, backgroundRatio = 0.95
-        )                
+            history=3, backgroundRatio=0.95
+        )
         with open(self._csv_file_name, "w", newline="") as csv_file:
             fieldnames = ["frame", "x", "y", "w", "h"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -84,7 +82,9 @@ class Tracker:
             while True:
                 if self._current_frame is None:
                     break
-                self._foreground_mask = background_subtractor.apply(self._current_frame)
+                self._foreground_mask = background_subtractor.apply(
+                    self._current_frame
+                )
                 self._tracking_object()
                 cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
                 cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
@@ -94,7 +94,6 @@ class Tracker:
                 self._amount_frame += 1
         self._capture.release()
         cv2.destroyAllWindows()
-
 
     def _tracking_object(self):
         """ Отобразить информацию о трекинге """
@@ -111,12 +110,13 @@ class Tracker:
             self._current_frame, (x, y),
             (x + w, y + h), (0, 0, 255), 2
         )
-        self._writer.writerow({"frame": self._amount_frame, "x": x, "y": y, "w": w, "h": h})
+        self._writer.writerow(
+            {"frame": self._amount_frame, "x": x, "y": y, "w": w, "h": h}
+        )
         print(f"update ({x}, {y}, {w}, {h})")
         self._fps.update()
         self._fps.stop()
         self._drow_information_text(success)
-
 
     def _update_box_and_tracker(self):
         self._process_foreground_mask()
@@ -126,10 +126,9 @@ class Tracker:
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             if(self._is_intersecting_boxes(self._box, (x, y, w, h))):
-                self._box = (x, y, w, h)              
+                self._box = (x, y, w, h)
                 self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
                 self._tracker.init(self._current_frame, self._box)
-
 
     def _is_intersecting_boxes(self, first_box, second_box):
         """ Пересекаются ли области 
@@ -151,7 +150,6 @@ class Tracker:
             return False
         return True
 
-
     def _process_foreground_mask(self):
         """ Обработать маску текущего кадра """
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
@@ -164,7 +162,6 @@ class Tracker:
             self._foreground_mask.copy(), kornel_size, sigma
         )
 
-    
     def _drow_information_text(self, success):
         """ Отобразить информацию о трекинге
 
@@ -181,7 +178,6 @@ class Tracker:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2
             )
 
-
     def _create_information_text(self, success):
         """ Создать информацию о трекинге для текущего кадра 
         Returns
@@ -194,7 +190,6 @@ class Tracker:
             ("FPS", "{:.2f}".format(self._fps.fps())),
             ("Number", self._amount_frame),
         ]
-
 
     def _check_commands(self):
         """ Проверить нет ли команд 
@@ -221,7 +216,6 @@ class Tracker:
             self._delete_box()
         return CONTINUE_PROCESSING
 
-
     def _save_frame(self):
         """ Сохранить кадр """
         try:
@@ -235,7 +229,6 @@ class Tracker:
             DEFAULT_IMAGE_NAME, self._current_frame
         )
 
-
     def _select_box(self):
         """ Выбрать область для трекинга """
         self._box = cv2.selectROI(
@@ -246,7 +239,6 @@ class Tracker:
         self._tracker.init(self._current_frame, self._box)
         self._fps = FPS().start()
 
-    
     def _delete_box(self):
         """ Удалить область трекинга """
         self._box = None
