@@ -87,7 +87,9 @@ class Tracker:
                 )
                 self._tracking_object()
                 cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
-                cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
+                cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)                
+                if self._amount_frame == 1:                                
+                    self._select_box()
                 if self._check_commands() == EXIT_SUCCESS:
                     break
                 _, self._current_frame = self._capture.read()
@@ -213,7 +215,9 @@ class Tracker:
         elif key == ord("a"):
             self._select_box()
         elif key == ord("d"):
-            self._delete_box()
+                self._delete_box()            
+        elif key == ord("w"):
+            cv2.waitKey(-1)
         return CONTINUE_PROCESSING
 
     def _save_frame(self):
