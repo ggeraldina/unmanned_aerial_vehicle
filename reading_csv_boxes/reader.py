@@ -20,7 +20,7 @@ class Reader:
             for row in reader:
                 if self._current_frame is None:
                     break
-                while int(row["frame"]) - 1 > self._amount_frame:
+                while int(row["frame"]) > self._amount_frame:
                     if self._current_frame is None:
                         break
                     self._drow_count()

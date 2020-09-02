@@ -113,7 +113,7 @@ class Tracker:
             (x + w, y + h), (0, 0, 255), 2
         )
         self._writer.writerow(
-            {"frame": self._amount_frame, "x": x, "y": y, "w": w, "h": h}
+            {"frame": self._amount_frame - 1, "x": x, "y": y, "w": w, "h": h}
         )
         print(f"update ({x}, {y}, {w}, {h})")
         self._fps.update()
