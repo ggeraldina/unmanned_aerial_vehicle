@@ -49,7 +49,7 @@ class Reader:
         amount_drawn_contours: int
             Количество объемлющих прямоугольников
         """
-        coordinate_x_place_text = int(self._frame_width / 2) - 30
+        coordinate_x_place_text = int(self._frame_width / 2) - 150
         COORDINATE_Y_PLACE_TEXT = 50
         font_scale = 1
         text_color = (0, 0, 255)
