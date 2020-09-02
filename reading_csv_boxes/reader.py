@@ -1,3 +1,5 @@
+import os
+import datetime
 import csv
 
 import cv2
@@ -8,11 +10,29 @@ from .constants import *
 class Reader:
     def __init__(self, path_video, path_csv, saving_video=False):
         self._path_csv = path_csv
+        self._saving_video = saving_video
         self._capture = cv2.VideoCapture(path_video)
         _, self._current_frame = self._capture.read()
         self._amount_frame = 0
         self._frame_height, self._frame_width = self._current_frame.shape[:2]
         self._box = None
+        self._out_video = None
+        self._init_out_video()
+
+    def _init_out_video(self):
+        """ Инициализировать атрибуты с видео результатом """
+        try:
+            os.makedirs(DIRECTORY_SAVING)
+        except OSError:
+            pass
+        now = datetime.datetime.now()
+        now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))     
+        framerate = 10
+        self._out_video = cv2.VideoWriter(
+            DIRECTORY_SAVING + now + DEFAULT_VIDEO_NAME, 
+            cv2.VideoWriter_fourcc(*"mp4v"),
+            framerate, (self._frame_width, self._frame_height)
+        )
 
     def run(self):
         with open(self._path_csv, newline='') as csv_file:
@@ -25,7 +45,8 @@ class Reader:
                         break
                     self._drow_count()
                     cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
-                    cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)
+                    cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)                    
+                    self._save_video()
                     if self._check_commands() == EXIT_SUCCESS:
                         break                        
                     _, self._current_frame = self._capture.read()
@@ -74,3 +95,9 @@ class Reader:
         if cv2.getWindowProperty(DEFAULT_FRAME_WINDOW_NAME, cv2.WND_PROP_VISIBLE) < 1:
             return EXIT_SUCCESS
         return CONTINUE_PROCESSING
+
+
+    def _save_video(self):
+        """ Сохранить результат """
+        if self._saving_video:
+            self._out_video.write(self._current_frame)
