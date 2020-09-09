@@ -82,18 +82,21 @@ class Tracker:
             while True:
                 if self._current_frame is None:
                     break
-                self._foreground_mask = background_subtractor.apply(
-                    self._current_frame
-                )
-                self._tracking_object()
-                cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
-                cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)                
-                if self._amount_frame == 1:                                
-                    self._select_box()
-                if self._check_commands() == EXIT_SUCCESS:
-                    break
+                frame_start = 3670
+                if self._amount_frame >= frame_start:
+                    self._foreground_mask = background_subtractor.apply(
+                        self._current_frame
+                    )
+                    self._tracking_object()
+                    cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
+                    cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)                
+                    if self._amount_frame == 1 or self._amount_frame == frame_start:                                
+                        self._select_box()
+                    if self._check_commands() == EXIT_SUCCESS:
+                        break
                 _, self._current_frame = self._capture.read()
                 self._amount_frame += 1
+                print(self._amount_frame)
         self._capture.release()
         cv2.destroyAllWindows()
 
@@ -128,9 +131,12 @@ class Tracker:
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             if(self._is_intersecting_boxes(self._box, (x, y, w, h))):
-                self._box = (x, y, w, h)
-                self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
-                self._tracker.init(self._current_frame, self._box)
+                persent = 0.4
+                square_box = self._box[2] * self._box[3]                
+                if  square_box * (1 - persent) < w * h < square_box * (1 + persent):
+                    self._box = (x, y, w, h)
+                    self._tracker = OPENCV_OBJECT_TRACKERS[self._tracker_name]()
+                    self._tracker.init(self._current_frame, self._box)
 
     def _is_intersecting_boxes(self, first_box, second_box):
         """ Пересекаются ли области 
@@ -238,7 +244,10 @@ class Tracker:
         self._box = cv2.selectROI(
             DEFAULT_FRAME_WINDOW_NAME, self._current_frame,
             fromCenter=False, showCrosshair=True
-        )        
+        )
+        if self._box[2:4] == (0, 0):
+            self._box = None
+            return        
         self._writer.writerow(
             {"frame": self._amount_frame, "logs": "Select and update box"}
         )

@@ -395,10 +395,8 @@
             "request": "launch",
             "module": "tracking_with_detection",
             "args": [
-                "--video",
-                // "test_video/any/drone_10_39.mp4",
-                // "test_video/uniyar/ch02_20200605114152.mp4",
-                "test_video/uniyar2/ch01_20200703114220.mp4",
+                "--video",                
+                "test_video/uniyar/ch01_20200605113709.mp4",
                 "--tracker",
                 // "kcf",
                 // "boosting",
