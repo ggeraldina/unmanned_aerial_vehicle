@@ -79,10 +79,11 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
+            frame_start = 12170
             while True:
+                print(self._amount_frame)
                 if self._current_frame is None:
                     break
-                frame_start = 3670
                 if self._amount_frame >= frame_start:
                     self._foreground_mask = background_subtractor.apply(
                         self._current_frame
@@ -96,7 +97,6 @@ class Tracker:
                         break
                 _, self._current_frame = self._capture.read()
                 self._amount_frame += 1
-                print(self._amount_frame)
         self._capture.release()
         cv2.destroyAllWindows()
 
