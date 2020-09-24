@@ -1,5 +1,5 @@
 DIRECTORY_SAVING = "saving_csv/"
-DEFAULT_XML_NAME = "hml.txt"
+DEFAULT_XML_NAME = "xml.txt"
 
 EXIT_SUCCESS = 0
 # EXIT_FAILURE = 1
