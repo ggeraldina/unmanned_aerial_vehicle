@@ -25,3 +25,5 @@ class Converter:
                         line = f'<box frame="{row["frame"]}" outside="0" occluded="0" keyframe="1" xtl="{int(row["x"])}" ytl="{int(row["y"])}" xbr="{int(row["x"]) + int(row["w"])}" ybr="{int(row["y"]) + int(row["h"])}">\n</box>'
                         xml_file.write(line + '\n')
                         row = next(reader, None)
+                        continue
+                    break
