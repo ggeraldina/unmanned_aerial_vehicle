@@ -79,7 +79,7 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
-            frame_start = 12170
+            frame_start = 21770
             while True:
                 print(self._amount_frame)
                 if self._current_frame is None:
