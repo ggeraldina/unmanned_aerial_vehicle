@@ -16,4 +16,4 @@ if not  args.get("csv", False):
     print("Нужно указать путь к csv. Параметр -csv или --csv.")
 else: 
     converter = Converter(args["csv"])
-    converter.run()
+    converter.run_convert_txt_drone_vs_bird()

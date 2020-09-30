@@ -430,7 +430,8 @@
             "module": "converter",
             "args": [
                 "--csv",
-                "saving_csv/ch01_20200605113709.csv",
+                // "saving_csv/ch01_20200605113709.csv",
+                "test_video/drone_vs_bird/annotations/gopro_000.txt",
             ]
         }
     ]
