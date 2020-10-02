@@ -13,8 +13,8 @@ class Converter:
         now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
         name_video = os.path.basename(self._path_in_file).split(".")[0]
         xml_file_name = DIRECTORY_SAVING + now + name_video + ".txt"
-        tracker_number = 5
-        frame_start = 4551
+        tracker_number = 0
+        frame_start = 0
         with open(xml_file_name, "w") as xml_file:
             with open(self._path_in_file, newline="") as csv_file:
                 reader = csv.DictReader(csv_file)
@@ -22,7 +22,7 @@ class Converter:
                 while(True):
                     if not row is None:
                         if not row["logs"] == "" or int(row["frame"]) < frame_start:
-                            row = reader.__next__()
+                            row = next(reader, None)
                             continue                    
                         start_tag = f'  <track id="{tracker_number}" label="drone" source="manual">\n'
                         line = f'    <box frame="{row["frame"]}" outside="0" occluded="0" keyframe="1" xtl="{int(row["x"])}" ytl="{int(row["y"])}" xbr="{int(row["x"]) + int(row["w"])}" ybr="{int(row["y"]) + int(row["h"])}">\n    </box>\n'
