@@ -79,12 +79,27 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
-            frame_start = 21770
+            frame_start = 4575
+            frame_end = 36525
             while True:
                 print(self._amount_frame)
                 if self._current_frame is None:
                     break
-                if self._amount_frame >= frame_start:
+                if self._amount_frame == frame_end:
+                    break
+                if (
+                    frame_start <= self._amount_frame <= 7775
+                    or 7950 <= self._amount_frame <= 8975
+                    or 9125 <= self._amount_frame <= 9325
+                    or 9575 <= self._amount_frame <= 12025
+                    or 12925 <= self._amount_frame <= 14625
+                    or 14925 <= self._amount_frame <= 20075
+                    or 20450 <= self._amount_frame <= 24700
+                    or 25175 <= self._amount_frame <= 27925
+                    or 28250 <= self._amount_frame <= 28800
+                    or 28975 <= self._amount_frame <= 30075
+                    or 30500 <= self._amount_frame <= frame_end
+                ):
                     self._foreground_mask = background_subtractor.apply(
                         self._current_frame
                     )
@@ -113,7 +128,7 @@ class Tracker:
         (x, y, w, h) = [int(v) for v in self._box]
         cv2.rectangle(
             self._current_frame, (x, y),
-            (x + w, y + h), (0, 0, 255), 2
+            (x + w, y + h), (0, 0, 255), 1
         )
         self._writer.writerow(
             {"frame": self._amount_frame - 1, "x": x, "y": y, "w": w, "h": h}
@@ -131,7 +146,7 @@ class Tracker:
         for contour in contours:
             x, y, w, h = cv2.boundingRect(contour)
             if(self._is_intersecting_boxes(self._box, (x, y, w, h))):
-                persent = 0.4
+                persent = 0.2
                 square_box = self._box[2] * self._box[3]                
                 if  square_box * (1 - persent) < w * h < square_box * (1 + persent):
                     self._box = (x, y, w, h)
