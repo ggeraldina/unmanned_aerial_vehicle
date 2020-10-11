@@ -398,7 +398,8 @@
                 "--video",                
                 // "test_video/uniyar/ch01_20200605113709.mp4",
                 // "test_video/uniyar/ch01_20200605115731.mp4",
-                "test_video/uniyar/ch01_20200605121410.mp4",
+                // "test_video/uniyar/ch01_20200605121410.mp4",
+                "test_video/uniyar/ch02_20200605110136.mp4",
                 "--tracker",
                 // "kcf",
                 // "boosting",
@@ -436,7 +437,8 @@
                 // "test_video/drone_vs_bird/annotations/gopro_000.txt",
                 // "saving_csv/2020-10-02_23-36-06_ch01_20200605115731.csv",
                 // "saving_csv/2020-10-04_22-21-55_ch01_20200605121410.csv",
-                "test_video/drone_vs_bird/annotations/00_06_10_to_00_06_27.txt",
+                // "test_video/drone_vs_bird/annotations/00_06_10_to_00_06_27.txt",
+                "saving_csv/task_ch02_20200605110136-annotations-cvat for video 1.1/ch02_20200605110136.csv",
             ]
         }
     ]
