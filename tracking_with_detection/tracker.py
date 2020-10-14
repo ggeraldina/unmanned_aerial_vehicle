@@ -79,8 +79,8 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
-            frame_start = 300
-            frame_end = 24300
+            frame_start = 1625
+            frame_end = 20175
             while True:
                 print(self._amount_frame)
                 if self._current_frame is None:
@@ -88,13 +88,23 @@ class Tracker:
                 if self._amount_frame == frame_end:
                     break
                 if (
-                    frame_start <= self._amount_frame <= 10600
-                    or 10750 <= self._amount_frame <= 11300
-                    or 11600 <= self._amount_frame <= 12250
-                    or 12400 <= self._amount_frame <= 12800
-                    or 13200 <= self._amount_frame <= 20475
-                    or 20525 <= self._amount_frame <= 21050
-                    or 21415 <= self._amount_frame <= frame_end
+                    frame_start <= self._amount_frame <= 2325
+                    or 2475 <= self._amount_frame <= 4700
+                    or 4950 <= self._amount_frame <= 5275
+                    or 5425 <= self._amount_frame <= 6000
+                    or 6400 <= self._amount_frame <= 6550
+                    or 6625 <= self._amount_frame <= 6850
+                    or 6975 <= self._amount_frame <= 7200
+                    or 7775 <= self._amount_frame <= 7875
+                    or 7925 <= self._amount_frame <= 8800
+                    or 9425 <= self._amount_frame <= 9550
+                    or 9725 <= self._amount_frame <= 11250
+                    or 11300 <= self._amount_frame <= 11625
+                    or 11975 <= self._amount_frame <= 12175
+                    or 12350 <= self._amount_frame <= 12525
+                    or 12550 <= self._amount_frame <= 15050
+                    or 16100 <= self._amount_frame <= 17650
+                    or 17975 <= self._amount_frame <= frame_end
                 ):
                     self._foreground_mask = background_subtractor.apply(
                         self._current_frame
