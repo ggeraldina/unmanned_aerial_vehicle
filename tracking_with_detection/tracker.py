@@ -79,7 +79,7 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
-            frame_start = 3800
+            frame_start = 16037
             frame_end = 33775
             while True:
                 print(self._amount_frame)
@@ -88,7 +88,8 @@ class Tracker:
                 if self._amount_frame == frame_end:
                     break
                 if (
-                    frame_start <= self._amount_frame <= 6375
+                    frame_start <= self._amount_frame and
+                    (3800 <= self._amount_frame <= 6375
                     or 6475 <= self._amount_frame <= 6875
                     or 7025 <= self._amount_frame <= 7325
                     or 7425 <= self._amount_frame <= 7700
@@ -106,7 +107,7 @@ class Tracker:
                     or 24425 <= self._amount_frame <= 25275
                     or 26000 <= self._amount_frame <= 26600
                     or 26675 <= self._amount_frame <= 27550
-                    or 29225 <= self._amount_frame <= frame_end
+                    or 29225 <= self._amount_frame <= frame_end)
                 ):
                     self._foreground_mask = background_subtractor.apply(
                         self._current_frame
