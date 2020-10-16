@@ -79,8 +79,8 @@ class Tracker:
             fieldnames = ["frame", "x", "y", "w", "h", "logs"]
             self._writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             self._writer.writeheader()
-            frame_start = 300
-            frame_end = 12775
+            frame_start = 3800
+            frame_end = 33775
             while True:
                 print(self._amount_frame)
                 if self._current_frame is None:
@@ -88,14 +88,25 @@ class Tracker:
                 if self._amount_frame == frame_end:
                     break
                 if (
-                    frame_start <= self._amount_frame <= 925
-                    or 1250 <= self._amount_frame <= 3575
-                    or 3950 <= self._amount_frame <= 4125
-                    or 4300 <= self._amount_frame <= 4475
-                    or 4800 <= self._amount_frame <= 5175
-                    or 5625 <= self._amount_frame <= 6450
-                    or 6600 <= self._amount_frame <= 6725
-                    or 7000 <= self._amount_frame <= frame_end
+                    frame_start <= self._amount_frame <= 6375
+                    or 6475 <= self._amount_frame <= 6875
+                    or 7025 <= self._amount_frame <= 7325
+                    or 7425 <= self._amount_frame <= 7700
+                    or 7925 <= self._amount_frame <= 8250
+                    or 8400 <= self._amount_frame <= 8725
+                    or 8800 <= self._amount_frame <= 9275
+                    or 9300 <= self._amount_frame <= 9400
+                    or 9750 <= self._amount_frame <= 10075
+                    or 10325 <= self._amount_frame <= 11050
+                    or 11250 <= self._amount_frame <= 13050
+                    or 13575 <= self._amount_frame <= 13925
+                    or 14025 <= self._amount_frame <= 14950
+                    or 15150 <= self._amount_frame <= 19950
+                    or 20225 <= self._amount_frame <= 24150
+                    or 24425 <= self._amount_frame <= 25275
+                    or 26000 <= self._amount_frame <= 26600
+                    or 26675 <= self._amount_frame <= 27550
+                    or 29225 <= self._amount_frame <= frame_end
                 ):
                     self._foreground_mask = background_subtractor.apply(
                         self._current_frame
