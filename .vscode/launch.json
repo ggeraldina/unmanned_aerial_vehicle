@@ -444,7 +444,8 @@
                 // "saving_csv/2020-10-02_23-36-06_ch01_20200605115731.csv",
                 // "saving_csv/2020-10-04_22-21-55_ch01_20200605121410.csv",
                 // "test_video/drone_vs_bird/annotations/00_06_10_to_00_06_27.txt",
-                "saving_csv/task_ch02_20200605110136-annotations-cvat for video 1.1/ch02_20200605110136.csv",
+                // "saving_csv/task_ch02_20200605110136-annotations-cvat for video 1.1/ch02_20200605110136.csv",
+                "saving_csv/2020-10-13_15-33-55_ch02_20200605113754.csv",
             ]
         }
     ]
