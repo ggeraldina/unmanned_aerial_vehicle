@@ -1,4 +1,4 @@
-DIRECTORY_SAVING = "saving_csv/"
+DIRECTORY_SAVING = "saving_csv/update_csv/"
 DEFAULT_XML_NAME = "xml.txt"
 
 EXIT_SUCCESS = 0

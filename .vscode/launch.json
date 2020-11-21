@@ -428,7 +428,7 @@
             "args": [
                 "--video",
                 "test_video/uniyar/ch01_20200605113709.mp4",
-                "--input",
+                "--csv",
                 "saving_csv/task_ch01_20200605113709-annotations-cvat for video 1.1/ch01_20200605113709.csv",
                 // "-sv",
                 // "True"
@@ -440,7 +440,7 @@
             "request": "launch",
             "module": "converter",
             "args": [
-                "--csv",
+                "--input",
                 // "saving_csv/ch01_20200605113709.csv",
                 // "test_video/drone_vs_bird/annotations/gopro_000.txt",
                 // "saving_csv/2020-10-02_23-36-06_ch01_20200605115731.csv",
@@ -454,7 +454,9 @@
                 // "saving_csv/ch01_20200703110241_part_1.csv",
                 // "saving_csv/2020-10-20_13-36-38_ch01_20200703110241_part2_1080.csv",
                 // "saving_csv/2020-10-23_09-54-53_ch02_20200703105833.csv",
-                "saving_csv/2020-10-15_09-39-13_ch02_20200605123002.csv",
+                // "saving_csv/2020-10-15_09-39-13_ch02_20200605123002.csv",
+                
+                "saving_csv/update_csv/annotations_ch01_20200605113709.xml",
             ]
         }
     ]

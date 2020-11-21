@@ -1,6 +1,7 @@
 import datetime
 import os
 import csv
+import xml.etree.ElementTree as xml
 
 from .constants import *
 
@@ -65,3 +66,35 @@ class Converter:
                             break
                 except StopIteration:
                     return
+
+    def convert_xml_to_my_csv(self):
+        now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
+        name_input_file = os.path.basename(self._path_in_file).split(".")[0]
+        csv_file_name = DIRECTORY_SAVING + now + name_input_file + ".csv"
+        fieldnames = ["frame", "x", "y", "w", "h", "logs"]
+        with open(csv_file_name, "w", newline="") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            xml_tree = xml.parse(self._path_in_file)
+            xml_root = xml_tree.getroot()
+            for box in xml_root.findall(".//box[@outside='0']"):
+                frame = int(box.get("frame"))
+                x = int(float(box.get("xtl")))
+                y = int(float(box.get("ytl")))
+                w = int(float(box.get("xbr"))) - x
+                h = int(float(box.get("ybr"))) - y        
+                writer.writerow(
+                    {"frame": frame, "x": x, "y": y, "w": w, "h": h}
+                )
+        self.sort_csv(csv_file_name, fieldnames)
+
+    def sort_csv(self, csv_file_name, fieldnames):
+        sorted_list = []
+        with open(csv_file_name, newline="") as csv_file:
+            reader = csv.DictReader(csv_file)
+            sorted_list = sorted(reader, key=lambda row:(int(row["frame"])), reverse=False)
+        with open(csv_file_name, "w", newline="") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(sorted_list)
+
