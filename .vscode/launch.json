@@ -407,7 +407,8 @@
                 // "test_video/uniyar/ch02_20200605123002.mp4",
                 // "test_video/uniyar2/ch01_20200703110241.mp4",     
                 // "test_video/uniyar2/ch01_20200703110241_part2_1080.mp4",
-                "test_video/uniyar2/ch02_20200703105833.mp4",
+                // "test_video/uniyar2/ch02_20200703105833.mp4",
+                "test_video/uniyar2/ch02_20200703112323.mp4",
                 "--tracker",
                 // "kcf",
                 // "boosting",
@@ -455,7 +456,7 @@
                 // "saving_csv/2020-10-20_13-36-38_ch01_20200703110241_part2_1080.csv",
                 // "saving_csv/2020-10-23_09-54-53_ch02_20200703105833.csv",
                 // "saving_csv/2020-10-15_09-39-13_ch02_20200605123002.csv",
-                
+                // "saving_csv/2020-10-30_09-10-17_ch02_20200703112323.csv",
                 "saving_csv/update_csv/annotations_ch01_20200605113709.xml",
             ]
         }
