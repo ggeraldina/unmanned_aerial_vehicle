@@ -428,10 +428,10 @@
             "args": [
                 "--video",
                 "test_video/uniyar/ch01_20200605113709.mp4",
-                "--csv",
-                "saving_csv/ch01_20200605113709.csv",
-                "-sv",
-                "True"
+                "--input",
+                "saving_csv/task_ch01_20200605113709-annotations-cvat for video 1.1/ch01_20200605113709.csv",
+                // "-sv",
+                // "True"
             ]
         },
         {

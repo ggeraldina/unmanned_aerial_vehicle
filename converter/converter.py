@@ -9,7 +9,7 @@ class Converter:
     def __init__(self, path_in_file):
         self._path_in_file = path_in_file
 
-    def run_convert_csv(self):
+    def convert_my_csv_to_my_xml(self):
         now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
         name_video = os.path.basename(self._path_in_file).split(".")[0]
         xml_file_name = DIRECTORY_SAVING + now + name_video + ".txt"
@@ -34,7 +34,7 @@ class Converter:
                         break
 
 
-    def run_convert_txt_drone_vs_bird(self):
+    def convert_txt_drone_vs_bird_to_my_xml(self):
         now = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S_"))        
         name_video = os.path.basename(self._path_in_file).split(".")[0]
         xml_file_name = DIRECTORY_SAVING + now + name_video + ".txt"
