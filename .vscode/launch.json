@@ -475,7 +475,11 @@
                 // "saving_csv/2020-10-23_09-54-53_ch02_20200703105833.csv",
                 // "saving_csv/2020-10-15_09-39-13_ch02_20200605123002.csv",
                 // "saving_csv/2020-10-30_09-10-17_ch02_20200703112323.csv",
-                "saving_csv/update_csv/annotations_ch01_20200605113709.xml",
+                // "saving_csv/update_csv/annotations_ch01_20200605113709.xml",
+                // "saving_csv/update_csv/annotations_ch01_20200605115731.xml",
+                // "saving_csv/update_csv/annotations_ch01_20200605121410.xml",
+                // "saving_csv/update_csv/annotations_ch02_20200605110136.xml"
+                "saving_csv/update_csv/annotations_ch02_20200605113754.xml"
             ]
         }
     ]
