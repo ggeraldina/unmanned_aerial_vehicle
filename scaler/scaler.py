@@ -7,10 +7,11 @@ from .constants import *
 
 # Папки для записи должы существовать
 class Scaler:
-    def __init__(self, path_to_video, path_to_csv, path_to_frames_csv, width, height=None):
+    def __init__(self, path_to_video, path_to_csv, path_to_frames_csv, path_to_result_csv, width, height=None):
         self._path_to_video = path_to_video
         self._path_to_csv = path_to_csv
-        self._path_to_frames = path_to_frames_csv     
+        self._path_to_frames = path_to_frames_csv
+        self._path_to_result_csv = path_to_result_csv 
         self._capture = cv2.VideoCapture(self._path_to_video)
         _, self._current_frame = self._capture.read()
         self._frame_height, self._frame_width = self._current_frame.shape[:2]        
@@ -33,14 +34,14 @@ class Scaler:
                 reader = csv.DictReader(csv_file)            
                 row = next(reader, None)
                 # Запись csv с характеристиками для tfrecord
-                with open(DIRECTORY_SAVING + CSV_RESULT, "w", newline="") as result_csv_file:                    
+                with open(self._path_to_result_csv, "w", newline="") as result_csv_file:                    
                     fieldnames = [
                             "video", "frame", "height", "width", 
                             "path", "name", 
                             "xtl", "ytl", "xbr", "ybr", 
                             "w", "h"
                         ]
-                    writer = csv.DictWriter(result_csv_file, fieldnames=fieldnames, delimiter=";")
+                    writer = csv.DictWriter(result_csv_file, fieldnames=fieldnames, delimiter=",")
                     writer.writeheader()
                     while(True):
                         self._current_frame = self.resize(
@@ -52,7 +53,7 @@ class Scaler:
                             break     
                         if frame_row is None:
                             break
-                        print("Current frame " + str(self._amount_frame))
+                        # print("Current frame " + str(self._amount_frame))
                         save_frame = int(frame_row["frame"])
                         box_frame = int(row["frame"])
                         if box_frame > save_frame:
