@@ -1,38 +1,29 @@
 ...
+INFO:tensorflow:Step 100 per-step time 0.835s loss=0.036
+I1204 21:07:53.640050 140174250284928 model_lib_v2.py:651] Step 100 per-step time 0.835s loss=0.036
+INFO:tensorflow:Step 200 per-step time 0.810s loss=0.018
+I1204 21:09:16.622199 140174250284928 model_lib_v2.py:651] Step 200 per-step time 0.810s loss=0.018
+INFO:tensorflow:Step 300 per-step time 0.844s loss=0.043
+I1204 21:10:39.867915 140174250284928 model_lib_v2.py:651] Step 300 per-step time 0.844s loss=0.043
+INFO:tensorflow:Step 400 per-step time 0.894s loss=0.129
+I1204 21:12:03.446134 140174250284928 model_lib_v2.py:651] Step 400 per-step time 0.894s loss=0.129
+INFO:tensorflow:Step 500 per-step time 0.831s loss=0.025
+I1204 21:13:27.020372 140174250284928 model_lib_v2.py:651] Step 500 per-step time 0.831s loss=0.025
+INFO:tensorflow:Step 600 per-step time 0.836s loss=0.098
+I1204 21:14:50.327080 140174250284928 model_lib_v2.py:651] Step 600 per-step time 0.836s loss=0.098
+INFO:tensorflow:Step 700 per-step time 0.843s loss=0.215
+I1204 21:16:13.993451 140174250284928 model_lib_v2.py:651] Step 700 per-step time 0.843s loss=0.215
+INFO:tensorflow:Step 800 per-step time 0.836s loss=0.067
+I1204 21:17:37.342289 140174250284928 model_lib_v2.py:651] Step 800 per-step time 0.836s loss=0.067
+INFO:tensorflow:Step 900 per-step time 0.828s loss=0.075
+I1204 21:19:01.165190 140174250284928 model_lib_v2.py:651] Step 900 per-step time 0.828s loss=0.075
+INFO:tensorflow:Step 1000 per-step time 0.812s loss=0.053
+I1204 21:20:24.648913 140174250284928 model_lib_v2.py:651] Step 1000 per-step time 0.812s loss=0.053
+INFO:tensorflow:Step 1100 per-step time 0.792s loss=0.072
+I1204 21:21:51.351515 140174250284928 model_lib_v2.py:651] Step 1100 per-step time 0.792s loss=0.072
+INFO:tensorflow:Step 1200 per-step time 0.872s loss=0.049
+I1204 21:23:15.000638 140174250284928 model_lib_v2.py:651] Step 1200 per-step time 0.872s loss=0.049
+INFO:tensorflow:Step 1300 per-step time 0.817s loss=0.016
+I1204 21:24:38.490153 140174250284928 model_lib_v2.py:651] Step 1300 per-step time 0.817s loss=0.016
 
-WARNING:tensorflow:Gradients do not exist for variables ['stack_6/block_1/expand_bn/gamma:0', 'stack_6/block_1/expand_bn/beta:0', 'stack_6/block_1/depthwise_conv2d/depthwise_kernel:0', 'stack_6/block_1/depthwise_bn/gamma:0', 'stack_6/block_1/depthwise_bn/beta:0', 'stack_6/block_1/project_bn/gamma:0', 'stack_6/block_1/project_bn/beta:0', 'top_bn/gamma:0', 'top_bn/beta:0'] when minimizing the loss.
-W1123 18:58:05.363785 139811629299456 optimizer_v2.py:1275] Gradients do not exist for variables ['stack_6/block_1/expand_bn/gamma:0', 'stack_6/block_1/expand_bn/beta:0', 'stack_6/block_1/depthwise_conv2d/depthwise_kernel:0', 'stack_6/block_1/depthwise_bn/gamma:0', 'stack_6/block_1/depthwise_bn/beta:0', 'stack_6/block_1/project_bn/gamma:0', 'stack_6/block_1/project_bn/beta:0', 'top_bn/gamma:0', 'top_bn/beta:0'] when minimizing the loss.
-INFO:tensorflow:Step 100 per-step time 1.272s loss=2.941
-I1123 19:00:23.957747 139815132448640 model_lib_v2.py:645] Step 100 per-step time 1.272s loss=2.941
-INFO:tensorflow:Step 200 per-step time 1.287s loss=2.462
-I1123 19:02:25.503414 139815132448640 model_lib_v2.py:645] Step 200 per-step time 1.287s loss=2.462
-INFO:tensorflow:Step 300 per-step time 1.259s loss=0.203
-I1123 19:04:28.084583 139815132448640 model_lib_v2.py:645] Step 300 per-step time 1.259s loss=0.203
-Traceback (most recent call last):
-  File "object_detection/model_main_tf2.py", line 113, in <module>
-    tf.compat.v1.app.run()
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/platform/app.py", line 40, in run
-    _run(main=main, argv=argv, flags_parser=_parse_flags_tolerate_undef)
-  File "/usr/local/lib/python3.6/dist-packages/absl/app.py", line 300, in run
-    _run_main(main, args)
-  File "/usr/local/lib/python3.6/dist-packages/absl/app.py", line 251, in _run_main
-    sys.exit(main(argv))
-  File "object_detection/model_main_tf2.py", line 110, in main
-    record_summaries=FLAGS.record_summaries)
-  File "/usr/local/lib/python3.6/dist-packages/object_detection/model_lib_v2.py", line 632, in train_loop
-    loss = _dist_train_step(train_input_iter)
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/def_function.py", line 780, in __call__
-    result = self._call(*args, **kwds)
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/def_function.py", line 807, in _call
-    return self._stateless_fn(*args, **kwds)  # pylint: disable=not-callable
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/function.py", line 2829, in __call__
-    return graph_function._filtered_call(args, kwargs)  # pylint: disable=protected-access
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/function.py", line 1848, in _filtered_call
-    cancellation_manager=cancellation_manager)
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/function.py", line 1924, in _call_flat
-    ctx, args, cancellation_manager=cancellation_manager))
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/function.py", line 550, in call
-    ctx=ctx)
-  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/eager/execute.py", line 60, in quick_execute
-    inputs, attrs, num_outputs)
-KeyboardInterrupt
+остановка обучения
