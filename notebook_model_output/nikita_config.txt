@@ -1,0 +1,68 @@
+config: {
+  '_model_dir': '/content/gdrive/My Drive/knots_detection/training/ssd_resnet50_v1_fpn_0', 
+  '_tf_random_seed': None, 
+  '_save_summary_steps': 100, 
+  '_save_checkpoints_steps': None, 
+  '_save_checkpoints_secs': 600, 
+  '_session_config': 
+    allow_soft_placement: true
+    graph_options {
+      rewrite_options {
+        meta_optimizer_iterations: ONE
+        }
+    }, 
+  '_keep_checkpoint_max': 5, 
+  '_keep_checkpoint_every_n_hours': 10000, 
+  '_log_step_count_steps': 100, 
+  '_train_distribute': None, 
+  '_device_fn': None, 
+  '_protocol': None, 
+  '_eval_distribute': None, 
+  '_experimental_distribute': None, 
+  '_experimental_max_worker_delay_secs': None, 
+  '_session_creation_timeout_secs': 7200, 
+  '_service': None, 
+  '_cluster_spec': <tensorflow.python.training.server_lib.ClusterSpec object at 0x7f2c96d9b128>, 
+  '_task_type': 'worker', 
+  '_task_id': 0, 
+  '_global_id_in_cluster': 0, 
+  '_master': '', 
+  '_evaluation_master': '', 
+  '_is_chief': True, 
+  '_num_ps_replicas': 0, 
+  '_num_worker_replicas': 1
+},
+config: {
+  '_model_dir': '/content/gdrive/My Drive/knots_detection/training/ssd_resnet50_v1_fpn_0', 
+  '_tf_random_seed': None, 
+  '_save_summary_steps': 100, 
+  '_save_checkpoints_steps': None, 
+  '_save_checkpoints_secs': 600, 
+  '_session_config': 
+    allow_soft_placement: true
+    graph_options {
+      rewrite_options {
+        meta_optimizer_iterations: ONE
+      }
+    }, 
+  '_keep_checkpoint_max': 5, 
+  '_keep_checkpoint_every_n_hours': 10000, 
+  '_log_step_count_steps': 100, 
+  '_train_distribute': None, 
+  '_device_fn': None, 
+  '_protocol': None, 
+  '_eval_distribute': None, 
+  '_experimental_distribute': None, 
+  '_experimental_max_worker_delay_secs': None, 
+  '_session_creation_timeout_secs': 7200, 
+  '_service': None, 
+  '_cluster_spec': <tensorflow.python.training.server_lib.ClusterSpec object at 0x7f2c96d9b128>, 
+  '_task_type': 'worker', 
+  '_task_id': 0, 
+  '_global_id_in_cluster': 0, 
+  '_master': '', 
+  '_evaluation_master': '', 
+  '_is_chief': True, 
+  '_num_ps_replicas': 0, 
+  '_num_worker_replicas': 1
+}
