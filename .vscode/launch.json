@@ -422,17 +422,23 @@
             ]
         },
         {
-            "name": "csrt reader",
+            "name": "reader",
             "type": "python",
             "request": "launch",
             "module": "reading_csv_boxes",
             "args": [
                 "--video",
-                "test_video/uniyar/ch01_20200605113709.mp4",
+                // "test_video/uniyar/ch01_20200605113709.mp4",
+                // "test_video/uniyar/ch02_20200605114152.mp4",
+                // "test_video/uniyar/ch02_20200605121548.mp4",
+                "test_video/uniyar/ch02_20200605123002.mp4",
                 "--csv",
-                "saving_csv/update_csv/2020-11-21_16-24-43_annotations_ch01_20200605113709.csv",
-                // "-sv",
-                // "True"
+                // "saving_csv/update_csv/2020-11-21_16-24-43_annotations_ch01_20200605113709.csv",
+                // "saving_csv/update_csv/2020-12-20_11-23-04_annotations_ch02_20200605114152.csv",
+                // "saving_csv/update_csv/2020-12-20_11-24-03_annotations_ch02_20200605121548.csv",
+                "saving_csv/update_csv/2020-12-20_11-24-35_annotations_ch02_20200605123002.csv",
+                "-sv",
+                "True"
             ]
         },
         {
@@ -479,7 +485,10 @@
                 // "saving_csv/update_csv/annotations_ch01_20200605115731.xml",
                 // "saving_csv/update_csv/annotations_ch01_20200605121410.xml",
                 // "saving_csv/update_csv/annotations_ch02_20200605110136.xml"
-                "saving_csv/update_csv/annotations_ch02_20200605113754.xml"
+                // "saving_csv/update_csv/annotations_ch02_20200605113754.xml",
+                // "saving_csv/update_csv/annotations_ch02_20200605114152.xml",
+                // "saving_csv/update_csv/annotations_ch02_20200605121548.xml",
+                "saving_csv/update_csv/annotations_ch02_20200605123002.xml"
             ]
         }
     ]
