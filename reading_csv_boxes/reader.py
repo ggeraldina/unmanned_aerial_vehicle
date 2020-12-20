@@ -27,7 +27,7 @@ class Reader:
             pass
         now = datetime.datetime.now()
         now = str(now.strftime("%Y-%m-%d_%H-%M-%S_"))     
-        framerate = 10
+        framerate = 25
         self._out_video = cv2.VideoWriter(
             DIRECTORY_SAVING + now + DEFAULT_VIDEO_NAME, 
             cv2.VideoWriter_fourcc(*"mp4v"),
@@ -43,6 +43,8 @@ class Reader:
                 if self._current_frame is None:
                     break
                 if not row is None and int(row["frame"]) == self._amount_frame and not row["logs"] == "":
+                    row = reader.__next__()                
+                if not row is None and int(row["frame"]) < self._amount_frame:
                     row = reader.__next__()
                 if not row is None and int(row["frame"]) == self._amount_frame:
                     cv2.rectangle(
