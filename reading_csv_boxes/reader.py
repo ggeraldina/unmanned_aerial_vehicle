@@ -54,7 +54,7 @@ class Reader:
                         2
                     )
                     row = next(reader, None)
-                self._drow_count()
+                # self._drow_count()
                 cv2.namedWindow(DEFAULT_FRAME_WINDOW_NAME, cv2.WINDOW_NORMAL)
                 cv2.imshow(DEFAULT_FRAME_WINDOW_NAME, self._current_frame)                    
                 self._save_video()
