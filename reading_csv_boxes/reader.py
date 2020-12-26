@@ -43,14 +43,14 @@ class Reader:
                 if self._current_frame is None:
                     break
                 if not row is None and int(row["frame"]) == self._amount_frame and not row["logs"] == "":
-                    row = reader.__next__()                
+                    row = next(reader, None)
                 if not row is None and int(row["frame"]) < self._amount_frame:
-                    row = reader.__next__()
+                    row = next(reader, None)
                 if not row is None and int(row["frame"]) == self._amount_frame:
                     cv2.rectangle(
                         self._current_frame, (int(row["x"]), int(row["y"])),
                         (int(row["x"]) + int(row["w"]), int(row["y"]) + int(row["h"])),
-                        (0, 0, 255),
+                        (255, 0, 0),
                         2
                     )
                     row = next(reader, None)
