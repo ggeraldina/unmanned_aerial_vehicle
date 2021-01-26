@@ -16,6 +16,6 @@ if not  args.get("input", False):
     print("Нужно указать путь к исходному файлу. Параметр -input или --input.")
 else: 
     converter = Converter(args["input"])
-    converter.convert_xml_to_my_csv()
-    # converter.convert_my_csv_to_my_xml()
+    # converter.convert_xml_to_my_csv()
+    converter.convert_my_csv_to_my_xml()
     # converter.convert_txt_drone_vs_bird_to_my_xml()

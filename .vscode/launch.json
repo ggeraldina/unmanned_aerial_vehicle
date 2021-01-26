@@ -484,6 +484,7 @@
                 // "saving_csv/2020-10-14_18-26-37_ch02_20200605121548.csv",
                 // "saving_csv/2020-10-15_08-32-06_ch01_20200703114220.csv",
                 // "saving_csv/ch01_20200703110241_part_1.csv",
+                "saving_csv/task_ch01_20200703110241_part_1-annotations-cvat for video 1.1/_ch01_20200703110241_part_1.csv"
                 // "saving_csv/2020-10-20_13-36-38_ch01_20200703110241_part2_1080.csv",
                 // "saving_csv/2020-10-23_09-54-53_ch02_20200703105833.csv",
                 // "saving_csv/2020-10-15_09-39-13_ch02_20200605123002.csv",
@@ -495,7 +496,7 @@
                 // "saving_csv/update_csv/annotations_ch02_20200605113754.xml",
                 // "saving_csv/update_csv/annotations_ch02_20200605114152.xml",
                 // "saving_csv/update_csv/annotations_ch02_20200605121548.xml",
-                "saving_csv/update_csv/annotations_ch02_20200605123002.xml"
+                // "saving_csv/update_csv/annotations_ch02_20200605123002.xml"
             ]
         }
     ]
